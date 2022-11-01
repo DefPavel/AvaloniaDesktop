@@ -24,6 +24,9 @@ public class Users
     [JsonPropertyName("grants")]
     public Grants[]? Grants { get; set; }// Права доступа пользователя
 
+    [JsonPropertyName("error")]
+    public string Error { get; set; } = string.Empty;
+
     public string FullName => $"{UserName}";
 }
 

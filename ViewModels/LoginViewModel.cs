@@ -1,58 +1,50 @@
-﻿using AvaloniaDesktop.Services;
+﻿using AvaloniaDesktop.Models;
+using AvaloniaDesktop.Services;
+using AvaloniaDesktop.Utils;
 using ReactiveUI;
+using ReactiveUI.Fody.Helpers;
 using Splat;
 using System;
+using System.IO;
+using System.Net;
 using System.Reactive;
 using System.Reactive.Disposables;
-using System.Runtime.Serialization;
+using System.Reactive.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace AvaloniaDesktop.ViewModels;
 
-public sealed class LoginViewModel : ViewModelBase, IRoutableViewModel
+public class LoginViewModel : ViewModelBase, IRoutableViewModel
 {
-
     #region Свойства
 
     private readonly ILoginService _loginService;
-    public string UrlPathSegment { get; } = "login";
+    private readonly IApplicationInfo _applicationInfo;
+    public string UrlPathSegment { get; } = "Login";
     public IScreen HostScreen { get; }
 
-
-    private string? _username;
-    public string? Username
-    {
-        get => _username;
-        set => this.RaiseAndSetIfChanged(ref _username, value);
-    }
-
-    private string? _password;
-    private IScreen screen;
-    private ILoginService loginService;
-
-    public string? Password
-    {
-        get => _password;
-        set => this.RaiseAndSetIfChanged(ref _password, value);
-    }
-
-    private string? _errorMessage;
-    public string? ErrorMessage
-    {
-        get => _errorMessage;
-        set => this.RaiseAndSetIfChanged(ref _errorMessage, value);
-    }
-
+    [Reactive] public string Username { get; set; } = string.Empty;
+    [Reactive] public string Password { get; set; } = string.Empty;
+    [Reactive] public string ErrorMessage { get; set; } = string.Empty;
+    [Reactive] public bool IsRememberMe { get; set; }
+    public string Version => string.Format("Version {0}", _applicationInfo.Version);
     #endregion
+
     public LoginViewModel(IScreen screen) :
-       this(screen, Locator.Current.GetService<ILoginService>())
+       this(screen, 
+           Locator.Current.GetService<ILoginService>(),
+           Locator.Current.GetService<IApplicationInfo>()
+
+           )
     {
 
     }
-    public LoginViewModel(IScreen screen, ILoginService loginService)
+    public LoginViewModel(IScreen screen, ILoginService loginService, IApplicationInfo applicationInfo)
     {
-        this.screen = screen;
-        this.loginService = loginService;
+        HostScreen = screen;
+        _loginService = loginService;
+        _applicationInfo = applicationInfo;
 
         // Проверка доступности отправки json
         var canLogin = this.WhenAnyValue(x => x.Username, x => x.Password,
@@ -75,7 +67,7 @@ public sealed class LoginViewModel : ViewModelBase, IRoutableViewModel
     #region Команды
     public ReactiveCommand<Unit, Unit> Login { get; }
 
-    public ReactiveCommand<Unit, Unit> Exit { get; }
+   // public ReactiveCommand<Unit, Unit> Exit { get; }
 
     #endregion
 
@@ -83,7 +75,32 @@ public sealed class LoginViewModel : ViewModelBase, IRoutableViewModel
 
     private async Task LoginAsync()
     {
-        var result = await _loginService.Authentication(Username!, Password!);
+        Users account;
+        try
+        {
+          //  account = await _loginService.Authentication(Username!, Password!);
+
+            await HostScreen.Router.NavigateAndReset.Execute(new HomeViewModel(HostScreen, new Users()));
+
+        }
+        catch (WebException ex)
+        {
+            if (ex.Status == WebExceptionStatus.ProtocolError)
+            {
+                if (ex.Response is HttpWebResponse response)
+                {
+                    using StreamReader reader = new(response.GetResponseStream());
+                    account = JsonSerializer.Deserialize<Users>(await reader.ReadToEndAsync()) ?? throw new InvalidOperationException();
+                    ErrorMessage = account.Error;
+                }
+            }
+            /*else
+            {
+                _ = MessageBox.Show("Не удалось получить данные с API!", "Fatal Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            */
+        }
+       
     }
 
     #endregion

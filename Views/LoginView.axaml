@@ -4,5 +4,71 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="AvaloniaDesktop.Views.LoginView">
-  Welcome to Avalonia!
+
+	<Border
+		 BorderBrush="#BDBDBD"
+         BorderThickness="2"
+         CornerRadius="3"
+         Margin="10" 
+         MinWidth="200" 
+         VerticalAlignment="Center"
+         Padding="30"
+         Background="White" 
+         MaxWidth="450"
+		 BoxShadow="3 3 10 0 #BDBDBD"
+		>
+		<Grid
+			ColumnDefinitions="120,*"
+			RowDefinitions="50,*,3,*,3,*,*"
+			>
+			<TextBlock
+				Grid.Column="1"
+				Grid.Row="0"
+				Classes="h4" 
+				Margin="0 0 50 0"
+				Text="JMU - Personnel"
+				/>
+			<TextBlock
+				
+				Grid.Column="0"
+                 Grid.Row="1"
+				Text="Введите логин:"
+				/>
+			<TextBox
+				
+				Grid.Column="1"
+                 Grid.Row="1"
+				Text="login"
+				/>
+			<TextBlock
+				
+				Grid.Column="0"
+                 Grid.Row="3"
+				Text="Введите пароль:"
+				/>
+			<TextBox
+				Grid.Column="1"
+                 Grid.Row="3"
+				Text="pass"
+				/>
+			<CheckBox
+				Grid.Column="1"
+				Grid.Row="5"
+				HorizontalAlignment="Right"
+				Content="Запомнить"
+				Margin="0 0 5 0"
+				/>
+			<Button
+				Width="84"
+				Grid.Column="1"
+				Grid.Row="6"
+				HorizontalAlignment="Right"
+				Content="Ввойти"
+				/>
+			
+			
+		</Grid>
+		
+	</Border>
+	
 </UserControl>

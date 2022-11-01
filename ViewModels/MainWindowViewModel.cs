@@ -2,7 +2,7 @@ using ReactiveUI;
 using System.Reactive.Disposables;
 
 namespace AvaloniaDesktop.ViewModels;
-public sealed class MainWindowViewModel : ReactiveObject, IScreen, IActivatableViewModel
+public class MainWindowViewModel : ReactiveObject, IActivatableViewModel, IScreen
 {
     public ViewModelActivator Activator { get; } = new ViewModelActivator();
     public RoutingState Router { get; } = new RoutingState();
@@ -16,6 +16,7 @@ public sealed class MainWindowViewModel : ReactiveObject, IScreen, IActivatableV
         {
 
         });
+       
     }
 }
 

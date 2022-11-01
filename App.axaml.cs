@@ -3,6 +3,8 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using AvaloniaDesktop.ViewModels;
 using AvaloniaDesktop.Views;
+using ReactiveUI;
+using Splat;
 
 namespace AvaloniaDesktop
 {
@@ -14,12 +16,21 @@ namespace AvaloniaDesktop
         }
 
         public override void OnFrameworkInitializationCompleted()
+
+
+
+
         {
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
-                desktop.MainWindow = new MainWindow
+                Locator.CurrentMutable.Register<IViewFor<HomeViewModel>>(() => new HomeView());
+                Locator.CurrentMutable.Register<IViewFor<LoginViewModel>>(() => new LoginView());
+
+                var viewModel = new MainWindowViewModel();
+
+                desktop.MainWindow = new MainWindow()
                 {
-                    DataContext = new MainWindowViewModel(),
+                    DataContext = viewModel
                 };
             }
 

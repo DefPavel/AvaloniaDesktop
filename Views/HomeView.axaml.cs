@@ -4,9 +4,9 @@ using ReactiveUI;
 
 namespace AvaloniaDesktop.Views
 {
-    public partial class LoginView : ReactiveUserControl<LoginViewModel>
+    public partial class HomeView : ReactiveUserControl<HomeViewModel>
     {
-        public LoginView()
+        public HomeView()
         {
             this.WhenActivated(disposables => {
 

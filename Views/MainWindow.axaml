@@ -5,14 +5,22 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="AvaloniaDesktop.Views.MainWindow"
+		xmlns:rxui="http://reactiveui.net"
+		xmlns:helpers="clr-namespace:AvaloniaDesktop.Helpers;assembly=AvaloniaDesktop"
         Icon="/Assets/avalonia-logo.ico"
 		WindowStartupLocation="CenterScreen"
+		MinWidth="800"
+		MinHeight="600"
+		Background="#EEEEEE"
         Title="AvaloniaDesktop">
 
-    <Design.DataContext>
-        <vm:MainWindowViewModel/>
-    </Design.DataContext>
-
-    <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+	<rxui:RoutedViewHost Router="{Binding Router}" PageTransition="{x:Static helpers:Transitions.Fade}">
+		<rxui:RoutedViewHost.DefaultContent>
+			<StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+				<TextBlock Classes="h1" Text="Personnel Application"/>
+				<TextBlock Foreground="#4CAF50" Text="Процесс Загрузки..." HorizontalAlignment="Center" TextAlignment="Center"/>
+			</StackPanel>
+		</rxui:RoutedViewHost.DefaultContent>
+	</rxui:RoutedViewHost>
 
 </Window>
