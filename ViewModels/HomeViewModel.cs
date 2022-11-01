@@ -4,7 +4,7 @@ using System.Reactive.Disposables;
 
 namespace AvaloniaDesktop.ViewModels;
 
-public class HomeViewModel : ViewModelBase, IScreen, IRoutableViewModel
+public sealed class HomeViewModel : ViewModelBase, IScreen, IRoutableViewModel
 {
     private readonly Users _account;
     public string UrlPathSegment => nameof(HomeViewModel);

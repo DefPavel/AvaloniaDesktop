@@ -16,15 +16,12 @@ namespace AvaloniaDesktop
         }
 
         public override void OnFrameworkInitializationCompleted()
-
-
-
-
         {
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
                 Locator.CurrentMutable.Register<IViewFor<HomeViewModel>>(() => new HomeView());
                 Locator.CurrentMutable.Register<IViewFor<LoginViewModel>>(() => new LoginView());
+                Bootstrapper.Register(Locator.CurrentMutable, Locator.Current);
 
                 var viewModel = new MainWindowViewModel();
 

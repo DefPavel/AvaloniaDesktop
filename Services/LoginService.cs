@@ -18,6 +18,7 @@ public class LoginService : ILoginService
         {
             UserName = username,
             Password = encryptedPass,
+            IdModules = ModulesProject.Personnel
         };
         // Отправляем запрос
         return await QueryService.JsonDeserializeWithObjectAndParam(token: "", "/auth", "POST", payloadUser);

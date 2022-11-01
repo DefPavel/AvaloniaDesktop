@@ -4,5 +4,21 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="AvaloniaDesktop.Views.HomeView">
- HOME VIEW
+	<Grid
+		RowDefinitions="Auto,*,*"
+		>
+		<Menu 
+			Grid.Row="0">
+			<MenuItem Header="File">
+				<MenuItem Header="File"/>
+				<MenuItem Header="File"/>
+				<MenuItem Header="File"/>
+			</MenuItem>
+			<MenuItem Header="File"/>
+			<MenuItem Header="File"/>
+			<MenuItem Header="File"/>
+			<MenuItem Header="File"/>
+		</Menu>
+		
+	</Grid>
 </UserControl>

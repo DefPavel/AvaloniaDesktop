@@ -11,14 +11,15 @@
 		WindowStartupLocation="CenterScreen"
 		MinWidth="800"
 		MinHeight="600"
-		Background="#EEEEEE"
+		Background="#F5F5F5"
         Title="AvaloniaDesktop">
 
 	<rxui:RoutedViewHost Router="{Binding Router}" PageTransition="{x:Static helpers:Transitions.Fade}">
 		<rxui:RoutedViewHost.DefaultContent>
 			<StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-				<TextBlock Classes="h1" Text="Personnel Application"/>
-				<TextBlock Foreground="#4CAF50" Text="Процесс Загрузки..." HorizontalAlignment="Center" TextAlignment="Center"/>
+				<!--
+				<TextBlock Classes="h1" Text="Personnel Application"/>-->
+				<TextBlock Classes="h3"  Text="Идет загрузка..." HorizontalAlignment="Center" TextAlignment="Center"/>
 			</StackPanel>
 		</rxui:RoutedViewHost.DefaultContent>
 	</rxui:RoutedViewHost>

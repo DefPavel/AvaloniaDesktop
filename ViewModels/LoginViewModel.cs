@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace AvaloniaDesktop.ViewModels;
 
-public class LoginViewModel : ViewModelBase, IRoutableViewModel
+public sealed class LoginViewModel : ViewModelBase, IRoutableViewModel
 {
     #region Свойства
 
@@ -27,25 +27,25 @@ public class LoginViewModel : ViewModelBase, IRoutableViewModel
     [Reactive] public string Username { get; set; } = string.Empty;
     [Reactive] public string Password { get; set; } = string.Empty;
     [Reactive] public string ErrorMessage { get; set; } = string.Empty;
-    [Reactive] public bool IsRememberMe { get; set; }
-    public string Version => string.Format("Version {0}", _applicationInfo.Version);
+    [Reactive] public bool IsRememberMe { get; set; } = false;
+    public string Version => string.Format("Версия приложения: {0}", _applicationInfo.FileVersion);
     #endregion
 
     public LoginViewModel(IScreen screen) :
        this(screen, 
            Locator.Current.GetService<ILoginService>(),
-           Locator.Current.GetService<IApplicationInfo>()
-
-           )
-    {
-
-    }
+           Locator.Current.GetService<IApplicationInfo>()){ }
     public LoginViewModel(IScreen screen, ILoginService loginService, IApplicationInfo applicationInfo)
     {
         HostScreen = screen;
         _loginService = loginService;
         _applicationInfo = applicationInfo;
 
+
+        #if DEBUG
+        Username = "1978";
+        Password = "root";
+        #endif
         // Проверка доступности отправки json
         var canLogin = this.WhenAnyValue(x => x.Username, x => x.Password,
         (userName, password) =>
@@ -78,9 +78,8 @@ public class LoginViewModel : ViewModelBase, IRoutableViewModel
         Users account;
         try
         {
-          //  account = await _loginService.Authentication(Username!, Password!);
-
-            await HostScreen.Router.NavigateAndReset.Execute(new HomeViewModel(HostScreen, new Users()));
+            account = await _loginService.Authentication(Username!, Password!);
+            await HostScreen.Router.NavigateAndReset.Execute(new HomeViewModel(HostScreen, account));
 
         }
         catch (WebException ex)
@@ -94,11 +93,10 @@ public class LoginViewModel : ViewModelBase, IRoutableViewModel
                     ErrorMessage = account.Error;
                 }
             }
-            /*else
+            else
             {
-                _ = MessageBox.Show("Не удалось получить данные с API!", "Fatal Error", MessageBoxButton.OK, MessageBoxImage.Error);
+               ErrorMessage = "Не удалось получить данные с API!";
             }
-            */
         }
        
     }

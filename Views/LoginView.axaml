@@ -5,70 +5,80 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="AvaloniaDesktop.Views.LoginView">
 
-	<Border
-		 BorderBrush="#BDBDBD"
+	<Grid RowDefinitions="*,35">
+		<Border
+		 Grid.Row="0"	
          BorderThickness="2"
          CornerRadius="3"
-         Margin="10" 
-         MinWidth="200" 
+         Margin="10"
+         MinWidth="200"
          VerticalAlignment="Center"
          Padding="30"
-         Background="White" 
+         Background="White"
          MaxWidth="450"
-		 BoxShadow="3 3 10 0 #BDBDBD"
-		>
-		<Grid
-			ColumnDefinitions="120,*"
-			RowDefinitions="50,*,3,*,3,*,*"
-			>
-			<TextBlock
-				Grid.Column="1"
-				Grid.Row="0"
-				Classes="h4" 
-				Margin="0 0 50 0"
-				Text="JMU - Personnel"
-				/>
-			<TextBlock
-				
-				Grid.Column="0"
-                 Grid.Row="1"
-				Text="Введите логин:"
-				/>
-			<TextBox
-				
-				Grid.Column="1"
-                 Grid.Row="1"
-				Text="login"
-				/>
-			<TextBlock
-				
-				Grid.Column="0"
-                 Grid.Row="3"
-				Text="Введите пароль:"
-				/>
-			<TextBox
-				Grid.Column="1"
-                 Grid.Row="3"
-				Text="pass"
-				/>
-			<CheckBox
-				Grid.Column="1"
-				Grid.Row="5"
-				HorizontalAlignment="Right"
-				Content="Запомнить"
-				Margin="0 0 5 0"
-				/>
-			<Button
-				Width="84"
-				Grid.Column="1"
-				Grid.Row="6"
-				HorizontalAlignment="Right"
-				Content="Ввойти"
-				/>
-			
-			
-		</Grid>
-		
-	</Border>
-	
+		 BoxShadow="3 3 10 2 #BDBDBD">
+			<Grid
+				ColumnDefinitions="110,*"
+				RowDefinitions="50,*,3,*,3,*,*">
+				<TextBlock
+					Grid.Column="1"
+					Grid.Row="0"
+					Classes="h3"
+					Margin="0 0 50 0"
+					Text="JMU - Personnel"
+					HorizontalAlignment="Center"/>
+				<TextBlock
+					VerticalAlignment="Center"
+					Grid.Column="0"
+					 Grid.Row="1"
+					Text="Введите логин:"/>
+				<TextBox
+					VerticalAlignment="Center"
+					Grid.Column="1"
+					 Grid.Row="1"
+					Text="{Binding Path=Username}"/>
+				<TextBlock
+					VerticalAlignment="Center"
+					Grid.Column="0"
+					Grid.Row="3"
+					Text="Введите пароль:"/>
+				<TextBox
+					VerticalAlignment="Center"
+					Grid.Column="1"
+					Grid.Row="3"
+					PasswordChar="•"
+					Text="{Binding Path=Password}"/>
+				<CheckBox
+					Grid.Column="1"
+					Grid.Row="5"
+					HorizontalAlignment="Right"
+					Content="Запомнить"
+					Margin="5"
+					IsChecked="{Binding Path=IsRememberMe}"/>
+				<Button
+					Width="80"
+					Grid.Column="1"
+					Grid.Row="6"
+					HorizontalAlignment="Right"
+					VerticalAlignment="Center"
+					Content="Ввойти"
+					Command="{Binding Login}"/>
+				<TextBlock
+					Grid.Column="1"
+					Grid.Row="6"
+					HorizontalAlignment="Left"
+					VerticalAlignment="Center"
+					Foreground="Red"
+					TextWrapping="Wrap"
+					Text="{Binding ErrorMessage}"
+					/>
+			</Grid>
+		</Border>
+		<TextBlock
+				Grid.Row="1"
+				HorizontalAlignment="Center"
+				VerticalAlignment="Center"
+				Text="{Binding Version}"/>
+	</Grid>
+
 </UserControl>
