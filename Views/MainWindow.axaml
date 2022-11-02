@@ -20,6 +20,7 @@
 				<!--
 				<TextBlock Classes="h1" Text="Personnel Application"/>-->
 				<TextBlock Classes="h3"  Text="Идет загрузка..." HorizontalAlignment="Center" TextAlignment="Center"/>
+				<ProgressBar IsIndeterminate="True"/>
 			</StackPanel>
 		</rxui:RoutedViewHost.DefaultContent>
 	</rxui:RoutedViewHost>

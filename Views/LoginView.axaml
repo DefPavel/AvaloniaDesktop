@@ -80,5 +80,4 @@
 				VerticalAlignment="Center"
 				Text="{Binding Version}"/>
 	</Grid>
-
 </UserControl>
