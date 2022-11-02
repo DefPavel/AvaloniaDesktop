@@ -19,23 +19,23 @@ public sealed class LoginViewModel : ViewModelBase, IRoutableViewModel
 {
     #region Свойства
 
-    private readonly ILoginService _loginService;
-    private readonly IApplicationInfo _applicationInfo;
-    public string UrlPathSegment { get; } = "Login";
+    private readonly ILoginService? _loginService;
+    private readonly IApplicationInfo? _applicationInfo;
+    public string UrlPathSegment => "Login";
     public IScreen HostScreen { get; }
 
-    [Reactive] public string Username { get; set; } = string.Empty;
-    [Reactive] public string Password { get; set; } = string.Empty;
+    [Reactive] public string Username { get; set; }
+    [Reactive] public string Password { get; set; }
     [Reactive] public string ErrorMessage { get; set; } = string.Empty;
     [Reactive] public bool IsRememberMe { get; set; } = false;
-    public string Version => string.Format("Версия приложения: {0}", _applicationInfo.FileVersion);
+    public string Version => $"Версия приложения: {_applicationInfo?.FileVersion}";
     #endregion
 
     public LoginViewModel(IScreen screen) :
        this(screen, 
            Locator.Current.GetService<ILoginService>(),
            Locator.Current.GetService<IApplicationInfo>()){ }
-    public LoginViewModel(IScreen screen, ILoginService loginService, IApplicationInfo applicationInfo)
+    public LoginViewModel(IScreen screen, ILoginService? loginService, IApplicationInfo? applicationInfo)
     {
         HostScreen = screen;
         _loginService = loginService;
@@ -78,8 +78,8 @@ public sealed class LoginViewModel : ViewModelBase, IRoutableViewModel
         Users account;
         try
         {
-            account = await _loginService.Authentication(Username!, Password!);
-            await HostScreen.Router.NavigateAndReset.Execute(new HomeViewModel(HostScreen, account));
+            account = await _loginService!.Authentication(Username!, Password!);
+            await HostScreen.Router.NavigateAndReset.Execute(new LayoutViewModel(HostScreen, account));
 
         }
         catch (WebException ex)

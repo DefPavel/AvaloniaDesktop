@@ -11,6 +11,7 @@ public static class Bootstrapper
     {
         // регистрация сервисов
         services.Register<ILoginService>(() => new LoginService());
+        services.Register<IHomeSerivce>(() => new HomeService());
         // информация о приложении
         services.RegisterLazySingleton<IApplicationInfo>(() => new ApplicationInfo(Assembly.GetExecutingAssembly()));
         

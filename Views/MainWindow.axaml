@@ -14,7 +14,11 @@
 		Background="#F5F5F5"
         Title="AvaloniaDesktop">
 
-	<rxui:RoutedViewHost Router="{Binding Router}" PageTransition="{x:Static helpers:Transitions.Fade}">
+	<Design.DataContext>
+		<vm:MainWindowViewModel/>
+	</Design.DataContext>
+	
+	<rxui:RoutedViewHost Router="{Binding Path=Router}" PageTransition="{x:Static helpers:Transitions.Fade}">
 		<rxui:RoutedViewHost.DefaultContent>
 			<StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
 				<!--

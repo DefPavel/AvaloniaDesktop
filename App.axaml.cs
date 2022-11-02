@@ -21,6 +21,7 @@ namespace AvaloniaDesktop
             {
                 Locator.CurrentMutable.Register<IViewFor<HomeViewModel>>(() => new HomeView());
                 Locator.CurrentMutable.Register<IViewFor<LoginViewModel>>(() => new LoginView());
+                Locator.CurrentMutable.Register<IViewFor<LayoutViewModel>>(() => new LayoutView());
                 Bootstrapper.Register(Locator.CurrentMutable, Locator.Current);
 
                 var viewModel = new MainWindowViewModel();

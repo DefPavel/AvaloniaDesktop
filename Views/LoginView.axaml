@@ -3,7 +3,12 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             xmlns:vm="using:AvaloniaDesktop.ViewModels"
              x:Class="AvaloniaDesktop.Views.LoginView">
+	
+	<Design.DataContext>
+		<vm:LoginViewModel/>
+	</Design.DataContext>
 
 	<Grid RowDefinitions="*,35">
 		<Border
@@ -62,6 +67,8 @@
 					HorizontalAlignment="Right"
 					VerticalAlignment="Center"
 					Content="Ввойти"
+					Background="#086f9e"
+					Foreground="White"
 					Command="{Binding Login}"/>
 				<TextBlock
 					Grid.Column="1"

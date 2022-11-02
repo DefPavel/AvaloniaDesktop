@@ -5,7 +5,7 @@ using AvaloniaDesktop.Services.Api;
 
 namespace AvaloniaDesktop.Services;
 
-public class LoginService : ILoginService
+public sealed class LoginService : ILoginService
 {
     // Ключ шифрования
     private const string KeyEncrypt = "8UHjPgXZzXDgkhqV2QCnooyJyxUzfJrO";
