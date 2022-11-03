@@ -9,8 +9,12 @@
 		<vm:HomeViewModel/>
 	</Design.DataContext>
 	
-	<Grid ColumnDefinitions="*,*">
+	<Grid 
+		Margin="3"
+		ColumnDefinitions="250,*">
 		<TreeView 
+			SelectedItem="{Binding Path=SelectedDepartment}"
+			MinWidth="200"
 			Items="{Binding Path=ItemsDepartmentsList}"
 			Grid.Column="0">
 			<TreeView.ItemTemplate>
@@ -22,7 +26,16 @@
 					/>
 				</TreeDataTemplate>
 			</TreeView.ItemTemplate>
-			
 		</TreeView>
+		<GridSplitter
+			Background="Gray"
+			HorizontalAlignment="Right"
+			Width="2"
+			Grid.Column="0"/>
+		<TextBlock 
+			Grid.Column="1"
+			Classes="h3"
+			Text="{Binding Path=SelectedDepartment.Name}"
+			/>
 	</Grid>
 </UserControl>

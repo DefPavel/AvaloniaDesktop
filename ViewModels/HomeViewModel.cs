@@ -3,32 +3,26 @@ using System.Linq;
 using AvaloniaDesktop.Models;
 using ReactiveUI;
 using System.Reactive.Disposables;
-using System.Runtime.InteropServices;
 using AvaloniaDesktop.Services;
-using DynamicData;
+using DynamicData.Binding;
+using ReactiveUI.Fody.Helpers;
 using Splat;
 
 namespace AvaloniaDesktop.ViewModels;
 
 public sealed class HomeViewModel : ReactiveObject, IActivatableViewModel, IRoutableViewModel
 {
-
     #region Свойства
-
-    private ObservableCollection<Departments> _itemsDepartmentsList;
-    public ObservableCollection<Departments> ItemsDepartmentsList => _itemsDepartmentsList;
-
+    
+    [Reactive] public Departments SelectedDepartment { get; set; } = new();
+    [Reactive] public ObservableCollection<Departments> ItemsDepartmentsList { get; set; } = new();
     public ViewModelActivator Activator { get; } = new();
-
     public string UrlPathSegment => nameof(HomeViewModel);
-    
     private readonly IHomeService? _homeService;
-    
     private readonly Users _account;
     public IScreen HostScreen { get; }
-    
-
     #endregion
+    
     public HomeViewModel(IScreen hostScreen , Users account) :
         this(hostScreen,
             account,
@@ -39,8 +33,8 @@ public sealed class HomeViewModel : ReactiveObject, IActivatableViewModel, IRout
         _account = account;
         _homeService = homeService;
         this.WhenActivated((CompositeDisposable disposables) =>
-        {
-            // LoadedDepartments();
+        { 
+            LoadedDepartments();
         });
     }
 
