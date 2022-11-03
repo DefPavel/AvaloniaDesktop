@@ -16,6 +16,12 @@ public sealed class HomeService : IHomeService
     public async Task<ObservableCollection<Departments>> GetTreeDepartments(Users user)
     {
         if (user == null) throw new ArgumentNullException(nameof(user));
-       return await QueryService.JsonDeserializeIObservable(user.Token, "/pers/tree/get", "GET");
+       return await QueryService.JsonDeserializeObservable<Departments>(user.Token, "/pers/tree/get", "GET");
+    }
+
+    public async Task<ObservableCollection<Persons>> GetPersonsByDepartment(Users user , Departments departments)
+    {
+        if (user == null) throw new ArgumentNullException(nameof(user));
+        return await QueryService.JsonDeserializeObservable<Persons>(user.Token, "/pers/person/get/department/" + departments.Id, "GET");
     }
 }

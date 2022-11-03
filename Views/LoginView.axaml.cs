@@ -1,3 +1,4 @@
+using System.Reactive.Disposables;
 using Avalonia.ReactiveUI;
 using AvaloniaDesktop.ViewModels;
 using ReactiveUI;
@@ -8,8 +9,12 @@ namespace AvaloniaDesktop.Views
     {
         public LoginView()
         {
-            this.WhenActivated(disposables => {
-
+            this.WhenActivated(disposables =>
+            {
+                this.WhenAnyObservable(x => x.ViewModel!.Login.IsExecuting)
+                    .BindTo(this, x => x.ProgressBar.IsVisible)
+                    .DisposeWith(disposables);
+                    
             });
 
             InitializeComponent();

@@ -9,5 +9,6 @@ namespace AvaloniaDesktop.Services;
 public interface IHomeService
 {
     Task<ObservableCollection<Departments>> GetTreeDepartments(Users user);
+    Task<ObservableCollection<Persons>> GetPersonsByDepartment(Users user, Departments departments);
     IObservable<IChangeSet<Departments>> Connect();
 }

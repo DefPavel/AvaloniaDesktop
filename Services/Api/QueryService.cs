@@ -19,7 +19,7 @@ public class QueryService
 
     #region Десериализация с IObservable
 
-    public static async ValueTask<ObservableCollection<Departments>> JsonDeserializeIObservable(string token, string queryUrl, string httpMethod) 
+    public static async ValueTask<ObservableCollection<T>> JsonDeserializeObservable<T>(string token, string queryUrl, string httpMethod)
     {
 #pragma warning disable SYSLIB0014 // Тип или член устарел
         var req = (HttpWebRequest)WebRequest.Create(ApiUrl + queryUrl);     // Создаём запрос
@@ -32,11 +32,9 @@ public class QueryService
 
         await using var responseStream = response.GetResponseStream();
         using StreamReader reader = new(responseStream, Encoding.UTF8);
-        return JsonSerializer.Deserialize<ObservableCollection<Departments>>(await reader.ReadToEndAsync())
+        return JsonSerializer.Deserialize<ObservableCollection<T>>(await reader.ReadToEndAsync())
                ?? throw new NullReferenceException();// Возвращаем json информацию которая пришла 
     }
-    
-
     #endregion
     
     #region Обобщение Десериализации С Токеном

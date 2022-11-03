@@ -4,19 +4,29 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              xmlns:vm="using:AvaloniaDesktop.ViewModels"
+             xmlns:i="using:Avalonia.Xaml.Interactivity"
+             xmlns:ia="using:Avalonia.Xaml.Interactions.Core"
              x:Class="AvaloniaDesktop.Views.HomeView">
 	<Design.DataContext>
 		<vm:HomeViewModel/>
 	</Design.DataContext>
 	
-	<Grid 
-		Margin="3"
-		ColumnDefinitions="250,*">
+	<Grid ColumnDefinitions="250, *">
 		<TreeView 
-			SelectedItem="{Binding Path=SelectedDepartment}"
+			Background="White"
+			Name="TreeView"
+			BorderThickness="2"
+			BorderBrush="#BDBDBD"
+			CornerRadius="3"
+			SelectedItem="{Binding Path=SelectedDepartments}"
 			MinWidth="200"
-			Items="{Binding Path=ItemsDepartmentsList}"
+			Items="{Binding Path=DepartmentsList}"
 			Grid.Column="0">
+			<i:Interaction.Behaviors>
+				<ia:EventTriggerBehavior EventName="Tapped" SourceObject="{Binding #TreeView}">
+					<ia:InvokeCommandAction Command="{Binding GetPersonsByDepartment}"/>
+				</ia:EventTriggerBehavior>
+			</i:Interaction.Behaviors>
 			<TreeView.ItemTemplate>
 				<TreeDataTemplate  
 					ItemsSource = "{Binding Child }">
@@ -28,14 +38,102 @@
 			</TreeView.ItemTemplate>
 		</TreeView>
 		<GridSplitter
-			Background="Gray"
+			Background="#BDBDBD"
 			HorizontalAlignment="Right"
 			Width="2"
 			Grid.Column="0"/>
-		<TextBlock 
-			Grid.Column="1"
-			Classes="h3"
-			Text="{Binding Path=SelectedDepartment.Name}"
-			/>
+		
+		<Grid 
+			RowDefinitions="35 , *"
+			Grid.Column="1">
+			<Separator Grid.Row="0" Background="#BDBDBD" VerticalAlignment="Top" Height="2"/>
+			<TextBlock 
+				Grid.Row="0"
+				Classes="h3"
+				Text="{Binding Path=SelectedDepartments.Name}"/>
+			<TabControl 
+				Margin="3 0 3 3"
+				Background="White"
+				BorderThickness="2"
+				BorderBrush="#BDBDBD"
+				Grid.Row="1">
+				<TabItem 
+					Header="Общая информация">
+					<Grid>
+						<TextBlock Text="Общая информация"/>
+					</Grid>
+				</TabItem>
+				<TabItem 
+					Header="Штатные подразделения">
+					<Grid>
+						<TextBlock Text="Штатные подразделения"/>
+					</Grid>
+				</TabItem>
+				<TabItem 
+					IsSelected="True"
+					Header="Сотрдуники">
+					<DataGrid 
+						SelectedItem="{Binding Path=SelectedPersons}"
+						
+						AutoGenerateColumns="False"
+						Items="{Binding Path=PersonsList}"
+						SelectionMode="Single"
+						Margin="3"
+						Grid.Row="1">
+						<DataGrid.Columns>
+							<DataGridCheckBoxColumn
+								Width="40"
+		                        Header="НПП"
+		                        Binding="{Binding IsPed ,TargetNullValue={x:Null}}" />
+						
+		                    <DataGridCheckBoxColumn
+		                        Width="50"
+		                        Header="Пенсионер"
+		                        Binding="{Binding IsPensioner ,TargetNullValue={x:Null}}"/>
+		                    <DataGridCheckBoxColumn
+		                        Width="50"
+		                        Header="Осн.место"
+		                        Binding="{Binding IsMain ,TargetNullValue={x:Null}}"/>
+		                    <DataGridCheckBoxColumn
+		                        Width="50"
+		                        Header="Студент"
+		                        Binding="{Binding IsStudent ,TargetNullValue={x:Null}}"/>
+		                    <DataGridCheckBoxColumn
+		                        Width="50"
+		                        Header="Аспирант"
+		                        Binding="{Binding IsGraduate ,TargetNullValue={x:Null}}"/>
+		                    <DataGridCheckBoxColumn
+		                        Width="50"
+		                        Header="Доктор"
+		                        Binding="{Binding IsDoctor ,TargetNullValue={x:Null}}"/>
+		                    <DataGridCheckBoxColumn
+		                        Width="50"
+		                        Header="Совместитель"
+		                        Binding="{Binding IsPluralismInner ,TargetNullValue={x:Null}}"/>
+		                    <DataGridCheckBoxColumn
+		                        Width="50"
+		                        Header="Внешний Совместитель"
+		                        Binding="{Binding IsPluralismOter ,TargetNullValue={x:Null}}"/>
+							
+							<DataGridTextColumn 
+								Header="Фамилия"
+								Binding="{Binding FirstName}"/>
+							<DataGridTextColumn 
+								Header="Имя"
+								Binding="{Binding MidlleName}"/>
+							<DataGridTextColumn 
+								Header="Отчество"
+								Binding="{Binding LastName}"/>
+		                                        
+							<DataGridTextColumn 
+								Header="Дата рождения"
+								Binding="{Binding Birthday}"/>
+						</DataGrid.Columns>
+					</DataGrid>
+				</TabItem>
+			</TabControl>
+			
+		</Grid>
+		
 	</Grid>
 </UserControl>

@@ -15,7 +15,6 @@ namespace AvaloniaDesktop.Views
                 Disposable.Create(() => { }).DisposeWith(disposable);
             });
             InitializeComponent();
-
             #if DEBUG
             this.AttachDevTools();
             #endif

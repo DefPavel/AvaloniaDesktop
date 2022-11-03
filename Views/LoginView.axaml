@@ -10,21 +10,22 @@
 		<vm:LoginViewModel/>
 	</Design.DataContext>
 
-	<Grid RowDefinitions="*,35">
+	<Grid 
+		RowDefinitions="*,35">
 		<Border
 		 Grid.Row="0"	
+		 Background="White"
          BorderThickness="2"
          CornerRadius="3"
          Margin="10"
          MinWidth="200"
          VerticalAlignment="Center"
          Padding="30"
-         Background="White"
-         MaxWidth="450"
+		 MaxWidth="450"
 		 BoxShadow="3 3 10 2 #BDBDBD">
 			<Grid
 				ColumnDefinitions="110,*"
-				RowDefinitions="50,*,3,*,3,*,*">
+				RowDefinitions="50,*,3,*,3,*,*,*">
 				<TextBlock
 					Grid.Column="1"
 					Grid.Row="0"
@@ -61,6 +62,7 @@
 					Margin="5"
 					IsChecked="{Binding Path=IsRememberMe}"/>
 				<Button
+					Name="LoginButton"
 					Width="80"
 					Grid.Column="1"
 					Grid.Row="6"
@@ -77,8 +79,13 @@
 					VerticalAlignment="Center"
 					Foreground="Red"
 					TextWrapping="Wrap"
-					Text="{Binding ErrorMessage}"
-					/>
+					Text="{Binding ErrorMessage}"/>
+				<ProgressBar
+					Grid.Column="1"
+					Grid.Row="7"
+					HorizontalAlignment="Left"
+					Name="ProgressBar"
+					IsIndeterminate="True"/>
 			</Grid>
 		</Border>
 		<TextBlock
