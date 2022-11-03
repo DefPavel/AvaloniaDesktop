@@ -8,12 +8,12 @@ using DynamicData;
 
 namespace AvaloniaDesktop.Services;
 
-public sealed class HomeService : IHomeSerivce
+public sealed class HomeService : IHomeService
 {
     private readonly SourceList<Departments> _itemsDepartments = new();
     public IObservable<IChangeSet<Departments>> Connect() => _itemsDepartments.Connect();
 
-    public async Task<ReadOnlyObservableCollection<Departments>> GetTreeDepartments(Users user)
+    public async Task<ObservableCollection<Departments>> GetTreeDepartments(Users user)
     {
         if (user == null) throw new ArgumentNullException(nameof(user));
        return await QueryService.JsonDeserializeIObservable(user.Token, "/pers/tree/get", "GET");

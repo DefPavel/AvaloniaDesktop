@@ -6,8 +6,8 @@ using DynamicData;
 
 namespace AvaloniaDesktop.Services;
 
-public interface IHomeSerivce
+public interface IHomeService
 {
-    Task<ReadOnlyObservableCollection<Departments>> GetTreeDepartments(Users user);
+    Task<ObservableCollection<Departments>> GetTreeDepartments(Users user);
     IObservable<IChangeSet<Departments>> Connect();
 }

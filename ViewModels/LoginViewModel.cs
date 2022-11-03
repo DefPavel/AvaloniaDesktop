@@ -27,7 +27,7 @@ public sealed class LoginViewModel : ViewModelBase, IRoutableViewModel
     [Reactive] public string Username { get; set; }
     [Reactive] public string Password { get; set; }
     [Reactive] public string ErrorMessage { get; set; } = string.Empty;
-    [Reactive] public bool IsRememberMe { get; set; } = false;
+    [Reactive] public bool IsRememberMe { get; set; }
     public string Version => $"Версия приложения: {_applicationInfo?.FileVersion}";
     #endregion
 

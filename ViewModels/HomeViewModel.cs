@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
+using System.Linq;
 using AvaloniaDesktop.Models;
 using ReactiveUI;
 using System.Reactive.Disposables;
-using System.Reactive.Linq;
-using System.Reactive.Threading.Tasks;
-using System.Threading.Tasks;
+using System.Runtime.InteropServices;
 using AvaloniaDesktop.Services;
 using DynamicData;
 using Splat;
@@ -17,39 +15,43 @@ public sealed class HomeViewModel : ReactiveObject, IActivatableViewModel, IRout
 
     #region Свойства
 
-    private ReadOnlyObservableCollection<Departments> _itemsDepartmentsList;
-    public ReadOnlyObservableCollection<Departments> ItemsDepartmentsList => _itemsDepartmentsList;
+    private ObservableCollection<Departments> _itemsDepartmentsList;
+    public ObservableCollection<Departments> ItemsDepartmentsList => _itemsDepartmentsList;
 
-    private readonly IHomeSerivce? _homeService;
+    public ViewModelActivator Activator { get; } = new();
+
+    public string UrlPathSegment => nameof(HomeViewModel);
     
-    public ViewModelActivator Activator { get; } = new ViewModelActivator();
-
-    public string UrlPathSegment { get; } = nameof(HomeViewModel);
+    private readonly IHomeService? _homeService;
+    
+    private readonly Users _account;
     public IScreen HostScreen { get; }
+    
 
     #endregion
     public HomeViewModel(IScreen hostScreen , Users account) :
         this(hostScreen,
             account,
-            Locator.Current.GetService<IHomeSerivce>()) { }
-    public HomeViewModel(IScreen hostScreen, Users account, IHomeSerivce? homeService)
+            Locator.Current.GetService<IHomeService>()) { }
+    public HomeViewModel(IScreen hostScreen, Users account, IHomeService? homeService)
     {
         HostScreen = hostScreen;
+        _account = account;
         _homeService = homeService;
-        
-        
-
         this.WhenActivated((CompositeDisposable disposables) =>
         {
-            // _itemsDepartmentsList = _homeService!.GetTreeDepartments(account);
-            _homeService!
-                .Connect()
-                .ObserveOn(RxApp.MainThreadScheduler)
-                // We .Bind() and now our mutable Items collection 
-                // contains the new items and the GUI gets refreshed.
-                .Bind(out _itemsDepartmentsList)
-                .Subscribe();
+            // LoadedDepartments();
         });
+    }
+
+    private async void LoadedDepartments()
+    {
+        var departments = await _homeService!.GetTreeDepartments(_account);
+
+        foreach (var item in departments)
+        {
+            ItemsDepartmentsList.Add(item);
+        }
     }
 
     

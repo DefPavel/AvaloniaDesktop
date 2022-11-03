@@ -9,5 +9,20 @@
 		<vm:HomeViewModel/>
 	</Design.DataContext>
 	
-	
+	<Grid ColumnDefinitions="*,*">
+		<TreeView 
+			Items="{Binding Path=ItemsDepartmentsList}"
+			Grid.Column="0">
+			<TreeView.ItemTemplate>
+				<TreeDataTemplate  
+					ItemsSource = "{Binding Child }">
+					<TextBlock
+						Tag  = "{Binding Id}"  
+						Text = "{Binding Name}" 
+					/>
+				</TreeDataTemplate>
+			</TreeView.ItemTemplate>
+			
+		</TreeView>
+	</Grid>
 </UserControl>
