@@ -79,11 +79,12 @@
 								Text="{Binding Path=FilterName , Mode=TwoWay}"/>
 						</StackPanel>
 						<DataGrid 
-							IsReadOnly="True"
+	
 							SelectedItem="{Binding Path=SelectedPersons}"
 							AutoGenerateColumns="False"
 							Items="{Binding Path=PersonsList}"
 							SelectionMode="Single"
+							CanUserResizeColumns="True"
 							Margin="5"
 							Grid.Row="1">
 							<DataGrid.Columns>
@@ -134,7 +135,7 @@
 									Header="Дата рождения"
 									Binding="{Binding Path=Birthday, StringFormat={}{0:dd.MM.yyyy}}"/>
 								<DataGridTextColumn 
-									Width="80"
+									
 									Header="Должность"
 									Binding="{Binding Path=PersonPosition}"/>
 								<DataGridTextColumn 
