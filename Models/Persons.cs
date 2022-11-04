@@ -11,6 +11,8 @@ public sealed class Persons
     private readonly string _urlStorage = ConfigurationManager.AppSettings["host"] 
                                           ?? throw new NullReferenceException("Uninitialized property: " + nameof(_urlStorage));
     
+    public string FullName => $"{FirstName} {MidlleName} {LastName}";
+    
     [JsonPropertyName("id")]
     public int Id { get; set; }
 

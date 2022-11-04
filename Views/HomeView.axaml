@@ -13,11 +13,11 @@
 	
 	<Grid ColumnDefinitions="250, *">
 		<TreeView 
+			SelectionMode="Single"
 			Background="White"
 			Name="TreeView"
 			BorderThickness="2"
 			BorderBrush="#BDBDBD"
-			CornerRadius="3"
 			SelectedItem="{Binding Path=SelectedDepartments}"
 			MinWidth="200"
 			Items="{Binding Path=DepartmentsList}"
@@ -42,10 +42,9 @@
 			HorizontalAlignment="Right"
 			Width="2"
 			Grid.Column="0"/>
-		
-		<Grid 
-			RowDefinitions="35 , *"
+		<Border 
 			Grid.Column="1">
+			<Grid RowDefinitions="35 , *">
 			<Separator Grid.Row="0" Background="#BDBDBD" VerticalAlignment="Top" Height="2"/>
 			<TextBlock 
 				Grid.Row="0"
@@ -53,8 +52,6 @@
 				Text="{Binding Path=SelectedDepartments.Name}"/>
 			<TabControl 
 				Margin="3 0 3 3"
-				Background="White"
-				BorderThickness="2"
 				BorderBrush="#BDBDBD"
 				Grid.Row="1">
 				<TabItem 
@@ -72,68 +69,119 @@
 				<TabItem 
 					IsSelected="True"
 					Header="Сотрдуники">
-					<DataGrid 
-						SelectedItem="{Binding Path=SelectedPersons}"
+					<Grid 
+						RowDefinitions="45, *, 25">
+						<StackPanel 
+							Grid.Row="0">
+							<TextBlock Margin="5 0 5 0" Text="Фильтр" />
+							<TextBox 
+								Watermark="По (Ф.И.О)"
+								Text="{Binding Path=FilterName , Mode=TwoWay}"/>
+						</StackPanel>
+						<DataGrid 
+							IsReadOnly="True"
+							SelectedItem="{Binding Path=SelectedPersons}"
+							AutoGenerateColumns="False"
+							Items="{Binding Path=PersonsList}"
+							SelectionMode="Single"
+							Margin="5"
+							Grid.Row="1">
+							<DataGrid.Columns>
+								<DataGridCheckBoxColumn
+									Width="40"
+			                        Header="НПП"
+			                        Binding="{Binding Path=IsPed ,TargetNullValue={x:Null}}" />
+								<DataGridCheckBoxColumn
+			                        Width="50"
+			                        Header="Пенсионер"
+			                        Binding="{Binding Path=IsPensioner ,TargetNullValue={x:Null}}"/>
+			                    <DataGridCheckBoxColumn
+			                        Width="50"
+			                        Header="Осн.место"
+			                        Binding="{Binding Path=IsMain ,TargetNullValue={x:Null}}"/>
+			                    <DataGridCheckBoxColumn
+			                        Width="50"
+			                        Header="Студент"
+			                        Binding="{Binding Path=IsStudent ,TargetNullValue={x:Null}}"/>
+			                    <DataGridCheckBoxColumn
+			                        Width="50"
+			                        Header="Аспирант"
+			                        Binding="{Binding Path=IsGraduate ,TargetNullValue={x:Null}}"/>
+			                    <DataGridCheckBoxColumn
+			                        Width="50"
+			                        Header="Доктор"
+			                        Binding="{Binding Path=IsDoctor ,TargetNullValue={x:Null}}"/>
+			                    <DataGridCheckBoxColumn
+			                        Width="50"
+			                        Header="Совместитель"
+			                        Binding="{Binding Path=IsPluralismInner ,TargetNullValue={x:Null}}"/>
+			                    <DataGridCheckBoxColumn
+			                        Width="50"
+			                        Header="Внешний Совместитель"
+			                        Binding="{Binding Path=IsPluralismOter ,TargetNullValue={x:Null}}"/>
+								
+								<DataGridTextColumn 
+									Header="Фамилия"
+									Binding="{Binding Path=FirstName}"/>
+								<DataGridTextColumn 
+									Header="Имя"
+									Binding="{Binding Path=MidlleName}"/>
+								<DataGridTextColumn 
+									Header="Отчество"
+									Binding="{Binding Path=LastName}"/>
+			                                        
+								<DataGridTextColumn 
+									Header="Дата рождения"
+									Binding="{Binding Path=Birthday, StringFormat={}{0:dd.MM.yyyy}}"/>
+								<DataGridTextColumn 
+									Width="80"
+									Header="Должность"
+									Binding="{Binding Path=PersonPosition}"/>
+								<DataGridTextColumn 
+									Width="50"
+									Header="Бюджет"
+									Binding="{Binding Path=StavkaBudget}"/>
+								<DataGridTextColumn 
+									Width="50"
+									Header="Внебюджет"
+									Binding="{Binding Path=StavkaNoBudget}"/>
+								<DataGridTextColumn 
+									Header="№ Приказ"
+									Binding="{Binding Path=OrderName}"/>
+
+								<DataGridTextColumn 
+									Header="Дата приказа"
+									Binding="{Binding Path=DateOrder, StringFormat={}{0:dd.MM.yyyy}}"/>
+	                                        
+								<DataGridTextColumn 
+									Header="Дата начачала раб."
+									Binding="{Binding Path=DateWorking, StringFormat={}{0:dd.MM.yyyy}}"/>
+								<DataGridTextColumn
+									Header="Телефон МТС"
+									Binding="{Binding Path=PhoneUkraine}"/>
+								<DataGridTextColumn
+									Header="Телефон Луг."
+									Binding="{Binding Path=PhoneLugakom}"/>
+							</DataGrid.Columns>
+						</DataGrid>
 						
-						AutoGenerateColumns="False"
-						Items="{Binding Path=PersonsList}"
-						SelectionMode="Single"
-						Margin="3"
-						Grid.Row="1">
-						<DataGrid.Columns>
-							<DataGridCheckBoxColumn
-								Width="40"
-		                        Header="НПП"
-		                        Binding="{Binding IsPed ,TargetNullValue={x:Null}}" />
+						<StackPanel 
+							Grid.Row="2"
+							Orientation="Horizontal">
+							<TextBlock Text="{Binding Path=CountAll, StringFormat='Всего: {0}; '}"/>
+							<TextBlock Text="Информация"/>
+							<TextBlock Text="Информация"/>
+							<TextBlock Text="Информация"/>
+						</StackPanel>
 						
-		                    <DataGridCheckBoxColumn
-		                        Width="50"
-		                        Header="Пенсионер"
-		                        Binding="{Binding IsPensioner ,TargetNullValue={x:Null}}"/>
-		                    <DataGridCheckBoxColumn
-		                        Width="50"
-		                        Header="Осн.место"
-		                        Binding="{Binding IsMain ,TargetNullValue={x:Null}}"/>
-		                    <DataGridCheckBoxColumn
-		                        Width="50"
-		                        Header="Студент"
-		                        Binding="{Binding IsStudent ,TargetNullValue={x:Null}}"/>
-		                    <DataGridCheckBoxColumn
-		                        Width="50"
-		                        Header="Аспирант"
-		                        Binding="{Binding IsGraduate ,TargetNullValue={x:Null}}"/>
-		                    <DataGridCheckBoxColumn
-		                        Width="50"
-		                        Header="Доктор"
-		                        Binding="{Binding IsDoctor ,TargetNullValue={x:Null}}"/>
-		                    <DataGridCheckBoxColumn
-		                        Width="50"
-		                        Header="Совместитель"
-		                        Binding="{Binding IsPluralismInner ,TargetNullValue={x:Null}}"/>
-		                    <DataGridCheckBoxColumn
-		                        Width="50"
-		                        Header="Внешний Совместитель"
-		                        Binding="{Binding IsPluralismOter ,TargetNullValue={x:Null}}"/>
-							
-							<DataGridTextColumn 
-								Header="Фамилия"
-								Binding="{Binding FirstName}"/>
-							<DataGridTextColumn 
-								Header="Имя"
-								Binding="{Binding MidlleName}"/>
-							<DataGridTextColumn 
-								Header="Отчество"
-								Binding="{Binding LastName}"/>
-		                                        
-							<DataGridTextColumn 
-								Header="Дата рождения"
-								Binding="{Binding Birthday}"/>
-						</DataGrid.Columns>
-					</DataGrid>
+					</Grid>
+					
 				</TabItem>
 			</TabControl>
-			
 		</Grid>
+			
+		</Border>
+	
 		
 	</Grid>
 </UserControl>
