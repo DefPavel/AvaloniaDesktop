@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Text.Json.Serialization;
+using ReactiveUI;
 
 namespace AvaloniaDesktop.Models;
 
-public sealed class Position
+public sealed class Position : ReactiveObject
 {
     [JsonPropertyName("id")] public int Id { get; set; }
 
@@ -11,7 +12,14 @@ public sealed class Position
     // Рабочий телефон
     [JsonPropertyName("phone")] public string Phone { get; set; } = string.Empty;
     // Навзание должности
-    [JsonPropertyName("position")] public string Name { get; set; } = string.Empty;
+
+    private string _name = string.Empty;
+    
+    [JsonPropertyName("position")] public string Name
+    {
+        get => _name;
+        set => this.RaiseAndSetIfChanged(ref _name, value);
+    }
 
     [JsonPropertyName("type_contract")] public string Contract { get; set; } = string.Empty;
 

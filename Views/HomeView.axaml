@@ -205,23 +205,13 @@
 						<StackPanel Grid.Column="1">
 						
 							<TextBlock Text="Должность"/>
-							<ComboBox 
-								PlaceholderText="Выбрать элемент"
-								IsTextSearchEnabled="True"
-								SelectedItem="{Binding SelectedPosition.Name}"
-								Items="{Binding Path=TypePosition}">
-								<ComboBox.DataTemplates>
-									<DataTemplate>
-										<TextBlock Text="{Binding Name}" />
-									</DataTemplate>
-								</ComboBox.DataTemplates>
-							</ComboBox>
 							<AutoCompleteBox 
-								MaxDropDownHeight="60"
+								MaxDropDownHeight="80"
 								Name="AutoTypePosition"
-								SelectedItem="{Binding Path=SelectedPosition.Name}"
+								Text="{Binding Path=SelectedPosition.Name}"
 								Items="{Binding Path=TypePosition}"
-								TextFilter="{Binding FilterType}"
+								ItemFilter="{Binding FilterType}"
+								FilterMode="StartsWithOrdinal"
 								
 							>
 							</AutoCompleteBox>

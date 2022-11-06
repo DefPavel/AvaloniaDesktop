@@ -96,8 +96,8 @@ public sealed class HomeViewModel : ViewModelBase, IRoutableViewModel
 
     #endregion
     
-    private IEnumerable<TypePosition>? _typePosition;
-    public IEnumerable<TypePosition>? TypePosition
+    private IEnumerable<string>? _typePosition;
+    public IEnumerable<string>? TypePosition
     {
         get => _typePosition;
         set => this.RaiseAndSetIfChanged(ref _typePosition, value);
@@ -156,21 +156,6 @@ public sealed class HomeViewModel : ViewModelBase, IRoutableViewModel
         if (string.IsNullOrEmpty(filterName)) return _ => true;
         return x => x.FullName.ToUpper().Contains(filterName.ToUpper());
     }
-    
-
-    private static bool StringContains(string str, string query)
-    {
-        return str.Contains(query, StringComparison.OrdinalIgnoreCase);
-    }
-    public async Task<IEnumerable<object>> PopulateAsync(string searchText, CancellationToken cancellationToken)
-    {
-        await Task.Delay(TimeSpan.FromSeconds(1.5), cancellationToken);
-
-        return
-            TypePosition!.Where(data => StringContains(data.Name, searchText))
-                .ToList();
-    }
-    
     // Загрузка дерева
     private async Task LoadedTreeAsync()
     {
@@ -185,7 +170,8 @@ public sealed class HomeViewModel : ViewModelBase, IRoutableViewModel
             .GetPersonsByDepartment(_account, SelectedDepartments);
         // получить все должности
         var allPositions = await _homeService!.GetAllPosition(_account);
-        TypePosition = allPositions;
+
+        TypePosition = allPositions.Select(VARIABLE => VARIABLE.Name).ToArray();
         // получить штатные должности выбранного отдела
         var positionByDepartment = await _homeService!.GetPositionsByDepartment(_account, SelectedDepartments);
         PositionsList = positionByDepartment;
