@@ -54,18 +54,173 @@
 				Margin="3 0 3 3"
 				BorderBrush="#BDBDBD"
 				Grid.Row="1">
+				
 				<TabItem 
-					Header="Общая информация">
-					<Grid>
-						<TextBlock Text="Общая информация"/>
+					Header="Информация о подразделении">
+					<Grid 
+						RowDefinitions="35,35,35,35,35,35"
+						ColumnDefinitions="100, *">
+						<TextBlock
+                                    Grid.Column="0"
+                                    Grid.Row="0"
+                                    Margin="2"
+                                    Padding="3"
+                                    Text="Наименование:"/>
+                                <TextBox
+                                    Grid.Column="1"
+                                    Grid.Row="0" 
+                                    
+                                    Text="{Binding SelectedDepartments.Name}" />
+                                <TextBlock
+                                    Grid.Column="0"
+                                    Grid.Row="1"
+                                    Margin="2"
+                                    Padding="3"
+                                    Text="Сокращение:"/>
+                                <TextBox
+                                    Grid.Column="1"
+                                    Grid.Row="1"
+                                    
+                                    Text="{Binding SelectedDepartments.Short}" />
+                                <TextBlock
+                                    Grid.Column="0"
+                                    Grid.Row="2"
+                                    Margin="2"
+                                    Padding="3"
+                                    Text="Внут.телефон:"/>
+                                <TextBox   
+                                    
+                                    Grid.Column="1"
+                                    Grid.Row="2"
+                                    Text="{Binding SelectedDepartments.Phone}" />
+                                <TextBlock
+                                    Grid.Column="0"
+                                    Grid.Row="3"
+                                    Margin="2"
+                                    Padding="3"
+                                    Text="Итого:"/>
+                                <StackPanel 
+                                    Grid.Column="1"
+                                    Grid.Row="3"
+                                    Orientation="Horizontal">
+                                    <TextBlock
+                                        Padding="3"
+                                        Margin="2"
+                                        Text="бюджет:"/>
+                                    <TextBlock
+                                        Padding="3"
+                                        Margin="2"
+                                        Text="{Binding Path=CountBudget}"
+                                        />
+                                    <TextBlock 
+                                        Padding="3"
+                                        Margin="2"
+                                        Text="внебюджет:"/>
+                                    <TextBlock
+                                        Padding="3"
+                                        Margin="2"
+                                        Text="{Binding Path=CountNotBudget}"
+                                        />
+                                </StackPanel>
+                                <TextBlock
+                                    Grid.Column="0"
+                                    Grid.Row="4"
+                                    Margin="2"
+                                    Padding="3"
+                                    Text="Свободно:"/>
+                                <StackPanel 
+                                    Grid.Column="1"
+                                    Grid.Row="4"
+                                    Orientation="Horizontal">
+                                    <TextBlock
+                                        Padding="3"
+                                        Margin="2"
+                                        Text="бюджет:"/>
+                                    <TextBlock
+                                        Padding="3"
+                                        Margin="2"
+                                        Text="{Binding Path=CountFreeBudget}"
+                                        />
+                                    <TextBlock
+                                        Padding="3"
+                                        Margin="2"
+                                        Text="внебюджет:"/>
+                                    <TextBlock
+                                        Padding="3"
+                                        Margin="2"
+                                        Text="{Binding Path=CountFreeNotBudget}"
+                                        />
+                                </StackPanel>
+                                <Button 
+                                    Background="#B71C1C"
+                                    Foreground="White"
+                                    Grid.Column="1"
+                                    Grid.Row="5"
+                                    Margin="2"
+                                    HorizontalAlignment="Right"
+                                    Command="{Binding RenameDepartment}"
+                                    Width="120"
+                                    Content="Сохранить"/>
 					</Grid>
 				</TabItem>
+				
 				<TabItem 
 					Header="Штатные подразделения">
-					<Grid>
-						<TextBlock Text="Штатные подразделения"/>
+					<Grid
+						ColumnDefinitions="*,*">
+						<DataGrid 
+							AutoGenerateColumns="False"
+							Margin="5"
+							SelectionMode="Single"
+							SelectedItem="{Binding Path=SelectedPosition}"
+							Items="{Binding Path=PositionsList}"
+							Grid.Column="0">
+							<DataGrid.Columns>
+								<!--<DataGridTemplateColumn Header="Должность" Width="*">
+									<DataTemplate>
+										<ComboBox Items="{Binding Path=TypePosition}">
+											<ComboBox.DataTemplates>
+												<DataTemplate>
+													<TextBlock Text="{Binding Name}" />
+												</DataTemplate>
+											</ComboBox.DataTemplates>
+										</ComboBox>
+									</DataTemplate>
+								</DataGridTemplateColumn>-->
+								
+								<DataGridTextColumn Header="Должность"
+								                    Binding="{Binding Name}"
+								                    />
+								
+								<DataGridTextColumn 
+									Header="Своб.бюджет"
+									Binding="{Binding Free_B}"
+								/>
+								<DataGridTextColumn 
+									Header="Своб. внебюджет"
+									Binding="{Binding Free_NB}"
+								/>
+							</DataGrid.Columns>
+						</DataGrid>
+						<StackPanel Grid.Column="1">
+						
+							<TextBlock Text="Должность"/>
+							<ComboBox 
+								PlaceholderText="Выбрать элемент"
+								IsTextSearchEnabled="True"
+								SelectedItem="{Binding SelectedPosition.Name}"
+								Items="{Binding Path=TypePosition}">
+								<ComboBox.DataTemplates>
+									<DataTemplate>
+										<TextBlock Text="{Binding Name}" />
+									</DataTemplate>
+								</ComboBox.DataTemplates>
+							</ComboBox>
+						</StackPanel>
+						
 					</Grid>
 				</TabItem>
+				
 				<TabItem 
 					IsSelected="True"
 					Header="Сотрдуники">
@@ -79,7 +234,6 @@
 								Text="{Binding Path=FilterName , Mode=TwoWay}"/>
 						</StackPanel>
 						<DataGrid 
-	
 							SelectedItem="{Binding Path=SelectedPersons}"
 							AutoGenerateColumns="False"
 							Items="{Binding Path=PersonsList}"
@@ -165,14 +319,27 @@
 									Binding="{Binding Path=PhoneLugakom}"/>
 							</DataGrid.Columns>
 						</DataGrid>
-						
 						<StackPanel 
 							Grid.Row="2"
 							Orientation="Horizontal">
-							<TextBlock Text="{Binding Path=CountAll, StringFormat='Всего: {0}; '}"/>
-							<TextBlock Text="Информация"/>
-							<TextBlock Text="Информация"/>
-							<TextBlock Text="Информация"/>
+							<TextBlock
+								Margin="2 2 0 0"
+								Text="{Binding StringFormat='Штат:(НПП:{0} сотр.', Path=CountIsPedPerson }"/>
+							<TextBlock
+								Margin="2 2 0 0"
+								Text="{Binding StringFormat='не НПП:{0} сотр.)', Path=CountNotIsPedPerson }"/>
+							<TextBlock
+								Margin="2 2 0 0"
+								Text="{Binding StringFormat='Cовместители:(НПП:{0} сотр.', Path=CountIsPluralismInnerIsPed }"/>
+							<TextBlock
+								Margin="2 2 0 0"
+								Text="{Binding StringFormat='не НПП:{0} сотр.)', Path=CountIsPluralismInnerNotIsPed }"/>
+							<TextBlock
+								Margin="2 2 0 0"
+								Text="{Binding StringFormat='Внеш.Cовместители:(НПП:{0} сотр.', Path=CountIsPluralismOterIsPed }"/>
+							<TextBlock
+								Margin="2 2 0 0"
+								Text="{Binding StringFormat='не НПП:{0} сотр.)', Path=CountIsPluralismOterNotIsPed }"/>
 						</StackPanel>
 						
 					</Grid>
