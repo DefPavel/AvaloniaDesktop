@@ -7,6 +7,7 @@ using AvaloniaDesktop.Models;
 using ReactiveUI;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AvaloniaDesktop.Models.Types;
 using AvaloniaDesktop.Services;
@@ -102,6 +103,15 @@ public sealed class HomeViewModel : ViewModelBase, IRoutableViewModel
         set => this.RaiseAndSetIfChanged(ref _typePosition, value);
     }
     
+    private string? _filterType;
+    public string? FilterType
+    {
+        get => _filterType;
+        set => this.RaiseAndSetIfChanged(ref _filterType, value);
+    }
+    
+    
+    
     private ObservableCollection<Position>? _positionsList;
     public ObservableCollection<Position>? PositionsList
     {
@@ -145,6 +155,20 @@ public sealed class HomeViewModel : ViewModelBase, IRoutableViewModel
     {
         if (string.IsNullOrEmpty(filterName)) return _ => true;
         return x => x.FullName.ToUpper().Contains(filterName.ToUpper());
+    }
+    
+
+    private static bool StringContains(string str, string query)
+    {
+        return str.Contains(query, StringComparison.OrdinalIgnoreCase);
+    }
+    public async Task<IEnumerable<object>> PopulateAsync(string searchText, CancellationToken cancellationToken)
+    {
+        await Task.Delay(TimeSpan.FromSeconds(1.5), cancellationToken);
+
+        return
+            TypePosition!.Where(data => StringContains(data.Name, searchText))
+                .ToList();
     }
     
     // Загрузка дерева

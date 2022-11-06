@@ -11,6 +11,8 @@ namespace AvaloniaDesktop.Views
         {
             this.WhenActivated(disposables =>
             {
+                Disposable.Create(() => { }).DisposeWith(disposables);
+                
                 this.WhenAnyObservable(x => x.ViewModel!.Login.IsExecuting)
                     .BindTo(this, x => x.ProgressBar.IsVisible)
                     .DisposeWith(disposables);

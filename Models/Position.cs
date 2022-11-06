@@ -18,7 +18,6 @@ public sealed class Position
     [JsonPropertyName("data_start_contract")] public DateTime? DateStartContract { get; set; }
 
     [JsonPropertyName("data_end_contract")] public DateTime? DateEndContract { get; set; }
-    //TODO: Потом поменяй на объект в API чтобы можно было через combobox выбирать отдел
     [JsonPropertyName("name_depart")] public string DepartmentName { get; set; } = string.Empty;
 
     [JsonPropertyName("id_order")] public int IdOrder { get; set; }

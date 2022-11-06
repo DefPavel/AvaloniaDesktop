@@ -216,6 +216,15 @@
 									</DataTemplate>
 								</ComboBox.DataTemplates>
 							</ComboBox>
+							<AutoCompleteBox 
+								MaxDropDownHeight="60"
+								Name="AutoTypePosition"
+								SelectedItem="{Binding Path=SelectedPosition.Name}"
+								Items="{Binding Path=TypePosition}"
+								TextFilter="{Binding FilterType}"
+								
+							>
+							</AutoCompleteBox>
 						</StackPanel>
 						
 					</Grid>
