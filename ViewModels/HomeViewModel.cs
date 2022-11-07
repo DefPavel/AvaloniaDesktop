@@ -7,12 +7,12 @@ using AvaloniaDesktop.Models;
 using ReactiveUI;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using AvaloniaDesktop.Models.Types;
 using AvaloniaDesktop.Services;
 using DynamicData;
 using DynamicData.Binding;
+using ReactiveUI.Fody.Helpers;
 using Splat;
 
 namespace AvaloniaDesktop.ViewModels;
@@ -20,112 +20,28 @@ namespace AvaloniaDesktop.ViewModels;
 public sealed class HomeViewModel : ViewModelBase, IRoutableViewModel
 {
     #region Свойства
-
-    private ObservableCollection<Departments> _departmentsList = new();
-    public ObservableCollection<Departments> DepartmentsList
-    {
-        get => _departmentsList;
-        set => this.RaiseAndSetIfChanged(ref _departmentsList, value);
-    }
-    
-    private Departments _selectedDepartments = new();
-    public Departments SelectedDepartments
-    {
-        get => _selectedDepartments;
-        set => this.RaiseAndSetIfChanged(ref _selectedDepartments, value);
-    }
-
-    private string _filterName = string.Empty;
-    public string FilterName
-    {
-        get => _filterName;
-        set => this.RaiseAndSetIfChanged(ref _filterName, value);
-    }
+    [Reactive] public ObservableCollection<Departments> DepartmentsList { get; set; } = new();
+    [Reactive] public Departments SelectedDepartments { get; set; } = new();
 
     #region Расчет количества сотрудников
-
-    private int _countAllPerson;
-    public int CountAllPerson
-    {
-        get => _countAllPerson;
-        set => this.RaiseAndSetIfChanged(ref _countAllPerson, value);
-    }
+    // public int CountAllPerson { get; set; }
+    [Reactive] public int CountIsPedPerson { get; set; }
+    [Reactive] public int CountNotIsPedPerson { get; set; }
+    [Reactive] public int CountIsPluralismInnerIsPed { get; set; }
+    [Reactive] public int CountIsPluralismInnerNotIsPed { get; set; }
+    [Reactive] public int CountIsPluralismOterIsPed { get; set; }
+    [Reactive] public int CountIsPluralismOterNotIsPed { get; set; }
+    [Reactive] public decimal CountFreeBudget { get; set; }
+    [Reactive] public decimal CountFreeNotBudget { get; set; }
+    [Reactive] public decimal CountBudget { get; set; }
+    [Reactive] public decimal CountNotBudget { get; set; }
     
-    private int _countIsPedPerson;
-    public int CountIsPedPerson
-    {
-        get => _countIsPedPerson;
-        set => this.RaiseAndSetIfChanged(ref _countIsPedPerson, value);
-    }
-    
-    private int _countNotIsPedPerson;
-    public int CountNotIsPedPerson
-    {
-        get => _countNotIsPedPerson;
-        set => this.RaiseAndSetIfChanged(ref _countNotIsPedPerson, value);
-    }
-    
-    private int _countIsPluralismInnerIsPed;
-    public int CountIsPluralismInnerIsPed
-    {
-        get => _countIsPluralismInnerIsPed;
-        set => this.RaiseAndSetIfChanged(ref _countIsPluralismInnerIsPed, value);
-    }
-    
-    private int _countIsPluralismInnerNotIsPed;
-    public int CountIsPluralismInnerNotIsPed
-    {
-        get => _countIsPluralismInnerNotIsPed;
-        set => this.RaiseAndSetIfChanged(ref _countIsPluralismInnerNotIsPed, value);
-    }
-    
-    private int _countIsPluralismOterIsPed;
-    public int CountIsPluralismOterIsPed
-    {
-        get => _countIsPluralismOterIsPed;
-        set => this.RaiseAndSetIfChanged(ref _countIsPluralismOterIsPed, value);
-    }
-    
-    private int _countIsPluralismOterNotIsPed;
-    public int CountIsPluralismOterNotIsPed
-    {
-        get => _countIsPluralismOterNotIsPed;
-        set => this.RaiseAndSetIfChanged(ref _countIsPluralismOterNotIsPed, value);
-    }
-    
-
     #endregion
-    
-    private IEnumerable<string>? _typePosition;
-    public IEnumerable<string>? TypePosition
-    {
-        get => _typePosition;
-        set => this.RaiseAndSetIfChanged(ref _typePosition, value);
-    }
-    
-    private string? _filterType;
-    public string? FilterType
-    {
-        get => _filterType;
-        set => this.RaiseAndSetIfChanged(ref _filterType, value);
-    }
-    
-    
-    
-    private ObservableCollection<Position>? _positionsList;
-    public ObservableCollection<Position>? PositionsList
-    {
-        get => _positionsList;
-        set => this.RaiseAndSetIfChanged(ref _positionsList, value);
-    }
-    
-    private Position _selectedPosition = new();
-    public Position SelectedPosition
-    {
-        get => _selectedPosition;
-        set => this.RaiseAndSetIfChanged(ref _selectedPosition, value);
-    }
-    
+    [Reactive] public IEnumerable<string>? TypePosition { get; set; }
+    [Reactive] public string? FilterName { get; set; }
+    [Reactive] public ObservableCollection<Position>? PositionsList { get; set; } = new();
+    [Reactive] public Position SelectedPosition { get; set; } = new();
+
     private readonly SourceList<Persons> _personsSourceList = new();
 
     private readonly ReadOnlyObservableCollection<Persons> _personsList;
@@ -146,6 +62,7 @@ public sealed class HomeViewModel : ViewModelBase, IRoutableViewModel
      #region Команды
     private ReactiveCommand<Unit, Unit> GetAllDepartment { get; }
     public ReactiveCommand<Unit, Unit> GetPersonsByDepartment { get; }
+    public ReactiveCommand<Unit, Unit> NavigateToCard { get; }
 
     #endregion
     
@@ -162,24 +79,33 @@ public sealed class HomeViewModel : ViewModelBase, IRoutableViewModel
         var departments = await _homeService!
             .GetTreeDepartments(_account);
         DepartmentsList = new ObservableCollection<Departments>(departments);
+        
+        // получить все должности
+        var allPositions = await _homeService!.GetAllPosition(_account);
+        TypePosition = allPositions.Select(variable => variable.Name).ToArray();
+    }
+
+    private void GoToPersonCard(Users account)
+    {
+        Console.Write(account);
+        HostScreen.Router.NavigateAndReset.Execute(new PersonCardViewModel(HostScreen, account));
     }
     private async Task GetPersonByTreeItemAsync()
     {
         // получить список сотрудников выбранного отдела
         var personsByDepartment = await _homeService!
             .GetPersonsByDepartment(_account, SelectedDepartments);
-        // получить все должности
-        var allPositions = await _homeService!.GetAllPosition(_account);
-
-        TypePosition = allPositions.Select(VARIABLE => VARIABLE.Name).ToArray();
         // получить штатные должности выбранного отдела
         var positionByDepartment = await _homeService!.GetPositionsByDepartment(_account, SelectedDepartments);
         PositionsList = positionByDepartment;
-        
+
         _personsSourceList.Clear();
         _personsSourceList.AddRange(personsByDepartment);
 
-        CountAllPerson = _personsList.DistinctBy(x => x.Id).Count();
+        SelectedPersons = _personsSourceList.Items.FirstOrDefault()!;
+        SelectedPosition = positionByDepartment.FirstOrDefault()!;
+        
+        // CountAllPerson = _personsList.DistinctBy(x => x.Id).Count();
         // && x.IsMain == true
         // Считаем сколько НПП
         CountIsPedPerson = _personsList.DistinctBy(x => x.Id).Count(x => x.IsPed);
@@ -194,15 +120,13 @@ public sealed class HomeViewModel : ViewModelBase, IRoutableViewModel
         // Совместителей Внешних не НПП
         CountIsPluralismOterNotIsPed = _personsList.DistinctBy(x => x.Id).Count(x => x.IsPluralismOter && x.IsPed == false);
         // Считаем свободных бюджетных ставки
-        /*CountFreeBudget = Positions!.Sum(x => x.Free_B);
+        CountFreeBudget = PositionsList!.Sum(x => x.Free_B);
         // Считаем свободных внебюджетных ставки
-        CountFreeNotBudget = Positions!.Sum(x => x.Free_NB);
+        CountFreeNotBudget = PositionsList!.Sum(x => x.Free_NB);
         // итоги бюджетных ставок
         CountBudget = _personsList.Sum(x => x.StavkaBudget);
         // итоги внебюджетных ставок
         CountNotBudget = _personsList.Sum(x => x.StavkaNoBudget);
-        */
-
     }
     #endregion
     
@@ -220,20 +144,32 @@ public sealed class HomeViewModel : ViewModelBase, IRoutableViewModel
             (item) => item.Id > 0);
         // Загрузка всех отделов
         GetAllDepartment = ReactiveCommand.CreateFromTask(LoadedTreeAsync);
-        GetAllDepartment.IsExecuting.ToProperty(this, x => x.IsBusy, out isBusy);
-        GetAllDepartment.Execute()
-            .Subscribe(x => Console.WriteLine("OnNext: {0}", x))
-            .Dispose();
         // Получить список сотрудников при выбаре отдела
         GetPersonsByDepartment = ReactiveCommand.CreateFromTask(async _ => await GetPersonByTreeItemAsync(), canExe);
         GetPersonsByDepartment.IsExecuting.ToProperty(this, x => x.IsBusy, out isBusy);
-       
+        
+        // Перейти к карточке сотрудника
+        var canGoToPerson = this.WhenAnyValue(x => x.SelectedPersons,
+            (item) => item.FullName.Length > 0);
+        NavigateToCard = ReactiveCommand.Create(() =>
+            GoToPersonCard(account), canGoToPerson);
+        
+        NavigateToCard.IsExecuting.ToProperty(this, x => x.IsBusy, out isBusy);
         // Фильтр по фио
         var filter = this.WhenValueChanged(x => x.FilterName).Select(Filter);
-        _personsSourceList.Connect().Filter(filter).ObserveOn(RxApp.MainThreadScheduler).Bind(out _personsList).Subscribe();
+        _personsSourceList.Connect()
+            .Filter(filter)
+            .ObserveOn(RxApp.MainThreadScheduler)
+            .Bind(out _personsList)
+            .Subscribe();
 
         this.WhenActivated((CompositeDisposable disposables) =>
         {
+            GC.Collect();
+            GetAllDepartment.IsExecuting.ToProperty(this, x => x.IsBusy, out isBusy);
+            GetAllDepartment.Execute()
+                .Subscribe(x => Console.WriteLine("OnNext: {0}", x))
+                .DisposeWith(disposables);
         });
     }
 }

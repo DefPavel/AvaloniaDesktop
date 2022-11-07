@@ -3,6 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             xmlns:model="using:AvaloniaDesktop.Models"
              xmlns:vm="using:AvaloniaDesktop.ViewModels"
              xmlns:i="using:Avalonia.Xaml.Interactivity"
              xmlns:ia="using:Avalonia.Xaml.Interactions.Core"
@@ -167,7 +168,7 @@
 				<TabItem 
 					Header="Штатные подразделения">
 					<Grid
-						ColumnDefinitions="*,*">
+						ColumnDefinitions="*, *">
 						<DataGrid 
 							AutoGenerateColumns="False"
 							Margin="5"
@@ -175,23 +176,49 @@
 							SelectedItem="{Binding Path=SelectedPosition}"
 							Items="{Binding Path=PositionsList}"
 							Grid.Column="0">
+							
 							<DataGrid.Columns>
-								<!--<DataGridTemplateColumn Header="Должность" Width="*">
-									<DataTemplate>
-										<ComboBox Items="{Binding Path=TypePosition}">
-											<ComboBox.DataTemplates>
-												<DataTemplate>
-													<TextBlock Text="{Binding Name}" />
-												</DataTemplate>
-											</ComboBox.DataTemplates>
-										</ComboBox>
-									</DataTemplate>
+								
+								<!--<DataGridTemplateColumn Header="Должность 2">
+									<DataGridTemplateColumn.CellTemplate>
+										<DataTemplate DataType="model:Position">
+											<TextBlock Text="{Binding Name}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+										</DataTemplate>
+									</DataGridTemplateColumn.CellTemplate>
+									<DataGridTemplateColumn.CellEditingTemplate>
+										<DataTemplate>
+											<ComboBox 
+												VirtualizationMode="Simple"
+												Foreground="Black"
+												SelectedItem="{Binding Name}"
+												Items="{Binding Path=DataContext.TypePosition, 
+									          RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}">
+											</ComboBox>
+										</DataTemplate>
+									</DataGridTemplateColumn.CellEditingTemplate>
 								</DataGridTemplateColumn>-->
 								
-								<DataGridTextColumn Header="Должность"
-								                    Binding="{Binding Name}"
-								                    />
 								
+								<DataGridTemplateColumn Header="Должность">
+									<DataGridTemplateColumn.CellTemplate>
+										<DataTemplate DataType="model:Position">
+											<TextBlock Text="{Binding Name}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+										</DataTemplate>
+									</DataGridTemplateColumn.CellTemplate>
+									<DataGridTemplateColumn.CellEditingTemplate>
+										<DataTemplate>
+											<AutoCompleteBox 
+												Foreground="Black"
+												MaxDropDownHeight="80"
+												Items="{Binding DataContext.TypePosition, 
+												RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+												Text="{Binding $parent[DataGridRow].DataContext.Name, Mode=TwoWay}" 
+												FilterMode="StartsWithOrdinal"
+												BorderThickness="0" />
+										</DataTemplate>
+									</DataGridTemplateColumn.CellEditingTemplate>
+								</DataGridTemplateColumn>
+
 								<DataGridTextColumn 
 									Header="Своб.бюджет"
 									Binding="{Binding Free_B}"
@@ -202,20 +229,172 @@
 								/>
 							</DataGrid.Columns>
 						</DataGrid>
-						<StackPanel Grid.Column="1">
+
+						<GridSplitter
+							Grid.Column="0"
+							Background="#BDBDBD"
+							HorizontalAlignment="Right"
+							Width="2"/>
 						
-							<TextBlock Text="Должность"/>
+						<Grid
+							Margin="5"
+							Grid.Column="1" 
+						      ColumnDefinitions="100,*" 
+						      RowDefinitions="35,35,35,35,50,35,*">
+
+							<TextBlock Grid.Column="0" Grid.Row="0" Text="Должность"/>
 							<AutoCompleteBox 
+								Grid.Row="0"
+								Grid.Column="1" 
+								BorderThickness="0"
 								MaxDropDownHeight="80"
-								Name="AutoTypePosition"
 								Text="{Binding Path=SelectedPosition.Name}"
 								Items="{Binding Path=TypePosition}"
-								ItemFilter="{Binding FilterType}"
 								FilterMode="StartsWithOrdinal"
-								
-							>
-							</AutoCompleteBox>
-						</StackPanel>
+							/>
+							<TextBlock 
+                                       
+										VerticalAlignment="Center"
+                                        Grid.Column="0"
+                                        Grid.Row="1"
+                                        Text="Количество:"/>
+                                   
+                                    <StackPanel
+	                                    Orientation="Horizontal"
+                                         Grid.Column="1"
+                                        Grid.Row="1"
+                                        >
+                                        <TextBox 
+	                                        VerticalAlignment="Center"
+	                                        IsEnabled="False"
+                                            Padding="5"
+                                            Text="{Binding SelectedPosition.CountAllBudget}"/>
+                                        <TextBlock
+	                                        VerticalAlignment="Center"
+	                                        Text="бюджет:"/>
+                                        <TextBox 
+	                                        VerticalAlignment="Center"
+	                                        Padding="5"
+                                            Text="{Binding SelectedPosition.Count_B}"/>
+                                        <TextBlock
+	                                        VerticalAlignment="Center"
+	                                        Text="внебюджет:"/>
+                                        <TextBox  
+	                                        VerticalAlignment="Center"
+	                                        Padding="5"
+                                            Text="{Binding SelectedPosition.Count_NB}"/>
+                                    </StackPanel>
+                                    <TextBlock 
+	                                    VerticalAlignment="Center"
+                                        Grid.Column="0"
+                                        Grid.Row="2"
+                                        Text="Свободно:"/>
+                                    <StackPanel
+                                        Orientation="Horizontal"
+                                         Grid.Column="1"
+                                        Grid.Row="2">
+                                        <TextBox 
+                                            IsEnabled="False"
+                                            VerticalAlignment="Center"
+                                            Text="{Binding SelectedPosition.CountAllFreeBudget}"/>
+                                        <TextBlock
+	                                        VerticalAlignment="Center"
+                                            Text="бюджет:"/>
+                                        <TextBox  
+	                                        VerticalAlignment="Center"
+	                                        Padding="5"
+	                                        Text="{Binding SelectedPosition.Free_B}"/>
+                                        <TextBlock
+	                                        VerticalAlignment="Center"
+                                            Text="внебюджет:"/>
+                                        <TextBox  
+	                                        Padding="5" 
+	                                        Text="{Binding SelectedPosition.Free_NB}"/>
+                                    </StackPanel>
+                                    <TextBlock 
+	                                    VerticalAlignment="Center"
+                                        Grid.Column="0"
+                                        Grid.Row="3"
+                                        Text="Оклад:"/>
+                                    <StackPanel  
+                                        Orientation="Horizontal"
+                                         Grid.Column="1"
+                                        Grid.Row="3">
+                                        <TextBox 
+	                                        VerticalAlignment="Center"
+                                            IsEnabled="False"
+                                            Padding="5"
+                                            Text="{Binding SelectedPosition.CountOklad}"/>
+                                        <TextBlock
+	                                        VerticalAlignment="Center"
+                                            Text="бюджет:"/>
+                                        <TextBox  
+	                                        VerticalAlignment="Center"
+                                            Padding="5"
+                                            Text="{Binding SelectedPosition.Oklad_B}"/>
+                                        <TextBlock
+	                                        VerticalAlignment="Center"
+                                            Text="внебюджет:"/>
+                                        <TextBox  
+	                                        VerticalAlignment="Center"
+                                            Padding="5"
+                                            Text="{Binding SelectedPosition.Oklad_NB}"/>
+                                    </StackPanel>
+                                    <StackPanel
+	                                    Margin="0 5 0 5"
+                                        Grid.ColumnSpan="2" Grid.Column="0"
+                                        Grid.Row="4">
+                                        <RadioButton
+                                            Padding=" 0 5 5 5"
+                                            IsChecked="{Binding RadioIsPed}"
+                                            Content="Педагогическая должность"/>
+                                        <RadioButton
+	                                        Padding=" 0 5 5 5"
+                                            IsChecked="{Binding RadioIsNoPed}"
+                                            Content="Ремонто строительная и обслуживающая"/>
+                                    </StackPanel>
+                                    <TextBlock 
+	                                    VerticalAlignment="Center"
+                                        Grid.Column="0"
+                                        Grid.Row="5"
+                                        Text="Лимит отпуска:"/>
+                                    <TextBox 
+                                       
+                                        Grid.Row="5"
+                                        Grid.Column="1"
+                                        Text="{Binding SelectedPosition.HolidayLimit}"
+                                        />
+                                    <StackPanel 
+                                        Grid.Column="1"
+                                        Grid.Row="6">
+                                        <Button 
+                                             IsEnabled="{Binding IsAdministrator}"
+                                        Background="White"
+                                        Width="120"
+                                        HorizontalAlignment="Right"
+                                        Command="{Binding AddPosition}"
+                                        Content="Создать"/>
+                                        <Button 
+                                            IsEnabled="{Binding IsAdministrator}"
+                                            Background="#B71C1C"
+                                            Foreground="White"
+ 
+                                        Width="120"
+                                        HorizontalAlignment="Right"
+                                        Command="{Binding SavePosition}"
+                                        Content="Сохранить"/>
+                                        <Button 
+                                             IsEnabled="{Binding IsAdministrator}"
+                                        Background="White"
+                                        Width="120"
+                                        HorizontalAlignment="Right"
+                                        Command="{Binding DeletePosition}"
+                                        Content="Удалить"/>
+                                    </StackPanel>
+							
+						</Grid>
+							
+					
 						
 					</Grid>
 				</TabItem>
@@ -233,6 +412,9 @@
 								Text="{Binding Path=FilterName , Mode=TwoWay}"/>
 						</StackPanel>
 						<DataGrid 
+							
+							Name="PersonsGrid"
+							IsReadOnly="True"
 							SelectedItem="{Binding Path=SelectedPersons}"
 							AutoGenerateColumns="False"
 							Items="{Binding Path=PersonsList}"
@@ -240,11 +422,17 @@
 							CanUserResizeColumns="True"
 							Margin="5"
 							Grid.Row="1">
+							<i:Interaction.Behaviors>
+								<ia:EventTriggerBehavior EventName="DoubleTapped" SourceObject="{Binding #PersonsGrid}">
+									<ia:InvokeCommandAction Command="{Binding NavigateToCard}"/>
+								</ia:EventTriggerBehavior>
+							</i:Interaction.Behaviors>
 							<DataGrid.Columns>
 								<DataGridCheckBoxColumn
 									Width="40"
 			                        Header="НПП"
-			                        Binding="{Binding Path=IsPed ,TargetNullValue={x:Null}}" />
+									
+									Binding="{Binding Path=IsPed ,TargetNullValue={x:Null}}" />
 								<DataGridCheckBoxColumn
 			                        Width="50"
 			                        Header="Пенсионер"
@@ -288,7 +476,6 @@
 									Header="Дата рождения"
 									Binding="{Binding Path=Birthday, StringFormat={}{0:dd.MM.yyyy}}"/>
 								<DataGridTextColumn 
-									
 									Header="Должность"
 									Binding="{Binding Path=PersonPosition}"/>
 								<DataGridTextColumn 

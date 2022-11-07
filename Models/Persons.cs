@@ -1,60 +1,33 @@
 ﻿using System;
 using System.Configuration;
 using System.Text.Json.Serialization;
+using ReactiveUI;
+using ReactiveUI.Fody.Helpers;
 
 namespace AvaloniaDesktop.Models;
 
-public sealed class Persons
+public sealed class Persons : ReactiveObject
 {
     #region Свойства персоны
 
     private readonly string _urlStorage = ConfigurationManager.AppSettings["host"] 
                                           ?? throw new NullReferenceException("Uninitialized property: " + nameof(_urlStorage));
-    
     public string FullName => $"{FirstName} {MidlleName} {LastName}";
-    
-    [JsonPropertyName("id")]
-    public int Id { get; set; }
-
-    [JsonPropertyName("id_pers_pos")]
-    public int IdPersPos { get; set; }
-
-    [JsonPropertyName("description")]
-    public string Description { get; set; } = string.Empty;
-
-    [JsonPropertyName("firstname")]
-    public string FirstName { get; set; } = string.Empty;
-
-    [JsonPropertyName("name")]
-    public string MidlleName { get; set; } = string.Empty;
-
-    [JsonPropertyName("lastname")]
-    public string LastName { get; set; } = string.Empty;
-
-    [JsonPropertyName("gender")]
-    public string Gender { get; set; } = string.Empty;
-
-    [JsonPropertyName("phone_ua")]
-    public string PhoneUkraine { get; set; } = string.Empty;
-
-    [JsonPropertyName("phone_lug")]
-    public string PhoneLugakom { get; set; } = string.Empty;
-
+    [JsonPropertyName("id")] [Reactive] public int Id { get; set; }
+    [JsonPropertyName("id_pers_pos")] [Reactive] public int IdPersPos { get; set; }
+    [JsonPropertyName("description")] [Reactive] public string Description { get; set; } = string.Empty;
+    [JsonPropertyName("firstname")] [Reactive] public string FirstName { get; set; } = string.Empty;
+    [JsonPropertyName("name")] [Reactive] public string MidlleName { get; set; } = string.Empty;
+    [JsonPropertyName("lastname")] [Reactive] public string LastName { get; set; } = string.Empty;
+    [JsonPropertyName("gender")] [Reactive] public string Gender { get; set; } = string.Empty;
+    [JsonPropertyName("phone_ua")] [Reactive] public string PhoneUkraine { get; set; } = string.Empty;
+    [JsonPropertyName("phone_lug")] [Reactive] public string PhoneLugakom { get; set; } = string.Empty;
     public string ShortDate => Birthday.ToShortDateString();
-
-    [JsonPropertyName("birthday")]
-    public DateTime Birthday { get; set; }
-
-    [JsonPropertyName("adress")]
-    public string Adress { get; set; } = string.Empty;
-
-    [JsonPropertyName("adress_rus")]
-    public string AdressRus { get; set; } = string.Empty;
-
-    [JsonPropertyName("data_start_contract")]
-    public DateTime? StartDateContract { get; set; } 
-    [JsonPropertyName("data_end_contract")]
-    public DateTime? EndDateContract { get; set; }
+    [JsonPropertyName("birthday")] [Reactive] public DateTime Birthday { get; set; }
+    [JsonPropertyName("adress")] [Reactive] public string Adress { get; set; } = string.Empty;
+    [JsonPropertyName("adress_rus")] [Reactive] public string AdressRus { get; set; } = string.Empty;
+    [JsonPropertyName("data_start_contract")] [Reactive] public DateTime? StartDateContract { get; set; } 
+    [JsonPropertyName("data_end_contract")] [Reactive] public DateTime? EndDateContract { get; set; }
 
     #region Место рождения 
     // город

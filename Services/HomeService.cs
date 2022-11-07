@@ -11,16 +11,13 @@ namespace AvaloniaDesktop.Services;
 
 public sealed class HomeService : IHomeService
 {
-    private readonly SourceList<Departments> _itemsDepartments = new();
-    public IObservable<IChangeSet<Departments>> Connect() => _itemsDepartments.Connect();
-
     public async Task<ObservableCollection<Departments>> GetTreeDepartments(Users user)
     {
         if (user == null) throw new ArgumentNullException(nameof(user));
        return await QueryService.JsonDeserializeObservable<Departments>(user.Token, "/pers/tree/get", "GET");
     }
     
-    public async Task<ObservableCollection<TypePosition>> GetAllPosition(Users user)
+    public async Task<IEnumerable<TypePosition>> GetAllPosition(Users user)
     {
         if (user == null) throw new ArgumentNullException(nameof(user));
         return await QueryService.JsonDeserializeObservable<TypePosition>(user.Token, "/pers/position/type/position/", "GET");

@@ -4,7 +4,7 @@ using System;
 
 namespace AvaloniaDesktop;
 
-public class Program
+public static class Program
 {
     [STAThread]
     public static void Main(string[] args) => BuildAvaloniaApp()
@@ -14,6 +14,17 @@ public class Program
     private static AppBuilder BuildAvaloniaApp()
         => AppBuilder.Configure<App>()
             .UsePlatformDetect()
+            .With(new X11PlatformOptions
+            {
+                EnableMultiTouch = true,
+                UseDBusMenu = true
+            })
+            .With(new Win32PlatformOptions
+            {
+                EnableMultitouch = true,
+                AllowEglInitialization = true
+            })
+            .UseSkia()
             .LogToTrace()
             .UseReactiveUI();
 }

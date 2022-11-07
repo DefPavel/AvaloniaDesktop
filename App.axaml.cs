@@ -8,7 +8,7 @@ using Splat;
 
 namespace AvaloniaDesktop
 {
-    public partial class App : Application
+    public class App : Application
     {
         public override void Initialize()
         {
@@ -19,6 +19,7 @@ namespace AvaloniaDesktop
         {
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
+                Locator.CurrentMutable.Register<IViewFor<PersonCardViewModel>>(() => new PersonCardView());
                 Locator.CurrentMutable.Register<IViewFor<HomeViewModel>>(() => new HomeView());
                 Locator.CurrentMutable.Register<IViewFor<LoginViewModel>>(() => new LoginView());
                 Locator.CurrentMutable.Register<IViewFor<LayoutViewModel>>(() => new LayoutView());

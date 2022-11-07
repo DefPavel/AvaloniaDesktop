@@ -15,6 +15,7 @@
     
     <Grid RowDefinitions=" Auto,* ">
         <Menu
+           Focusable="False"
             Grid.Row="0">
             <MenuItem Header="File">
                 <MenuItem Header="Поиск"/>
