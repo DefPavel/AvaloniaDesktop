@@ -25,7 +25,7 @@
                 Margin="5 5 5 0"
                 Grid.Row="0">
                 <Button
-                    Command="{Binding GetBack}"
+                    Command="{Binding GoBack}"
                     Content="Вернуться на главное"/>
                 <Button
                     Command="{Binding GetPersonsByDepartments}"
@@ -76,10 +76,10 @@
             <DataGrid 
                 Margin="10 0 10 0"
                 Name="PersonsGrid"
-                IsReadOnly="True"
                 AutoGenerateColumns="False"
                 Items="{Binding Path=PersonsList}"
                 SelectionMode="Single"
+                SelectedItem="{Binding SelectedPerson}"
                 Grid.Row="3">
                 <DataGrid.Columns>
                     <DataGridTextColumn 

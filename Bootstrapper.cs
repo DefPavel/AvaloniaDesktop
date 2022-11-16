@@ -13,6 +13,7 @@ public static class Bootstrapper
         services.Register<ILoginService>(() => new LoginService());
         services.Register<IHomeService>(() => new HomeService());
         services.Register<ICardService>(() => new CardService());
+        services.Register<ISearchService>(() => new SearchService());
         // информация о приложении
         services.RegisterLazySingleton<IApplicationInfo>(() => new ApplicationInfo(Assembly.GetExecutingAssembly()));
         

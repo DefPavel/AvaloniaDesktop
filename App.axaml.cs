@@ -19,6 +19,7 @@ namespace AvaloniaDesktop
         {
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
+                Locator.CurrentMutable.Register<IViewFor<GlobalSearchViewModel>>(() => new SearchView());
                 Locator.CurrentMutable.Register<IViewFor<PersonCardViewModel>>(() => new PersonCardView());
                 Locator.CurrentMutable.Register<IViewFor<HomeViewModel>>(() => new HomeView());
                 Locator.CurrentMutable.Register<IViewFor<LoginViewModel>>(() => new LoginView());

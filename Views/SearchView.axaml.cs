@@ -5,9 +5,9 @@ using ReactiveUI;
 
 namespace AvaloniaDesktop.Views;
 
-public partial class PersonCardView : ReactiveUserControl<PersonCardViewModel>
+public partial class SearchView : ReactiveUserControl<GlobalSearchViewModel>
 {
-    public PersonCardView()
+    public SearchView()
     {
         this.WhenActivated(disposables =>
         {

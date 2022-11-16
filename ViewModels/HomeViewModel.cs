@@ -51,8 +51,6 @@ public sealed class HomeViewModel : ViewModelBase, IRoutableViewModel
     private readonly ReadOnlyObservableCollection<Persons> _personsList;
     public ReadOnlyObservableCollection<Persons> PersonsList => _personsList;
 
-    
-    
     public string UrlPathSegment => nameof(HomeViewModel);
     private readonly IHomeService? _homeService;
     private readonly Users _account;
@@ -89,8 +87,8 @@ public sealed class HomeViewModel : ViewModelBase, IRoutableViewModel
     {
         // Console.Write(account);
         //HostScreen.Router.NavigateAndReset.Execute(new PersonCardViewModel(HostScreen, account, persons, departments));
-        
-        Router.Navigate.Execute(new LoginViewModel(HostScreen));
+        HostScreen.Router.Navigate.Execute(new PersonCardViewModel(HostScreen, account, persons, departments));
+        // Router.Navigate.Execute(new LoginViewModel(HostScreen));
     }
     private async Task GetPersonByTreeItemAsync()
     {
@@ -104,7 +102,7 @@ public sealed class HomeViewModel : ViewModelBase, IRoutableViewModel
         _personsSourceList.Clear();
         _personsSourceList.AddRange(personsByDepartment);
 
-        SelectedPersons = _personsSourceList.Items.FirstOrDefault()!;
+        SelectedPersons =  personsByDepartment.FirstOrDefault()!;
         SelectedPosition = positionByDepartment.FirstOrDefault()!;
         
         // CountAllPerson = _personsList.DistinctBy(x => x.Id).Count();

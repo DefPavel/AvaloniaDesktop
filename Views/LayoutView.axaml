@@ -18,7 +18,9 @@
            Focusable="False"
             Grid.Row="0">
             <MenuItem Header="File">
-                <MenuItem Header="Поиск"/>
+                <MenuItem 
+                    Command="{Binding Search}"
+                    Header="Поиск"/>
                 <MenuItem Header="Настройки"/>
                 <MenuItem 
                     Command="{Binding Path=Logout}"

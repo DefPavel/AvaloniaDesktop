@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
@@ -18,10 +19,16 @@ namespace AvaloniaDesktop.ViewModels;
 public sealed class PersonCardViewModel :  ViewModelBase, IRoutableViewModel
 {
     public string UrlPathSegment => nameof(PersonCardViewModel);
-    
     public IScreen HostScreen { get; }
     
     private readonly ICardService? _cardService;
+
+    #region Команды
+    
+    public ReactiveCommand<Unit, IRoutableViewModel?> GoBack { get; }
+    
+    public ReactiveCommand<Unit, Unit> GetAllPersons { get; }
+    #endregion
 
     #region Свойства
 
@@ -63,12 +70,13 @@ public sealed class PersonCardViewModel :  ViewModelBase, IRoutableViewModel
         _personsSourceList.Clear();
         _personsSourceList.AddRange(personsList);
 
+        SelectedPerson = personsList.FirstOrDefault()!;
+
     }
     
 
     #endregion
-
-
+    
     #region Команды
 
     private ReactiveCommand<Unit, Unit> GetPersonsByDepartments { get; }
@@ -93,8 +101,10 @@ public sealed class PersonCardViewModel :  ViewModelBase, IRoutableViewModel
     {
         HostScreen = hostScreen;
         _cardService = getService;
-        SelectedPerson = selectedPersons;
+        //SelectedPerson = selectedPersons;
         
+        // Вернуться на главную страницу
+        GoBack = HostScreen.Router.NavigateBack;
         // Загрузка сотрдуников на выбранный отдел
         GetPersonsByDepartments = ReactiveCommand.CreateFromTask(async _ => 
             await ApiGetListPersons(account , selectedDepartment.Id));
