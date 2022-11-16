@@ -1,8 +1,16 @@
 ﻿using System;
+using System.Collections.ObjectModel;
+using System.Reactive;
 using System.Reactive.Disposables;
+using System.Reactive.Linq;
+using System.Threading.Tasks;
 using AvaloniaDesktop.Models;
 using AvaloniaDesktop.Services;
+using AvaloniaDesktop.Services.Api;
+using DynamicData;
+using DynamicData.Binding;
 using ReactiveUI;
+using ReactiveUI.Fody.Helpers;
 using Splat;
 
 namespace AvaloniaDesktop.ViewModels;
@@ -12,17 +20,101 @@ public sealed class PersonCardViewModel :  ViewModelBase, IRoutableViewModel
     public string UrlPathSegment => nameof(PersonCardViewModel);
     
     public IScreen HostScreen { get; }
+    
+    private readonly ICardService? _cardService;
 
-    public PersonCardViewModel(IScreen hostScreen , Users account) :
+    #region Свойства
+
+    [Reactive] public string? FilterName { get; set; }
+    
+    [Reactive] public Persons SelectedPerson { get; set; }
+    
+
+    #endregion
+
+    #region Свойства RadioButton
+    
+    [Reactive] public bool RadioIsMale { get; set; }
+    
+    [Reactive] public bool RadioIsFemale { get; set; }
+    
+    #endregion
+
+    #region Массивы
+
+    private readonly SourceList<Persons> _personsSourceList = new();
+    
+    private readonly ReadOnlyObservableCollection<Persons> _personsList;
+    public ReadOnlyObservableCollection<Persons> PersonsList => _personsList;
+    
+    #endregion
+
+    #region Логика
+    
+    private static Func<Persons, bool> Filter(string? filterName)
+    {
+        if (string.IsNullOrEmpty(filterName)) return _ => true;
+        return x => x.FirstName.ToUpper().StartsWith(filterName.ToUpper());
+    }
+
+    private async Task ApiGetListPersons(Users users, int idDepartment)
+    {
+        var personsList = await _cardService!.GetShortNamePersonsByDepartmentId(users, idDepartment);
+        _personsSourceList.Clear();
+        _personsSourceList.AddRange(personsList);
+
+    }
+    
+
+    #endregion
+
+
+    #region Команды
+
+    private ReactiveCommand<Unit, Unit> GetPersonsByDepartments { get; }
+    
+
+    #endregion
+    
+
+    public PersonCardViewModel(IScreen hostScreen , Users account , Persons selectedPersons, Departments selectedDepartment) :
         this(hostScreen,
             account,
-            Locator.Current.GetService<ICardService>()) { }
+            Locator.Current.GetService<ICardService>(),
+            selectedPersons,
+            selectedDepartment
+        ) { }
 
-    public PersonCardViewModel(IScreen hostScreen, Users account, ICardService? getService)
+    public PersonCardViewModel(IScreen hostScreen,
+        Users account, 
+        ICardService? getService,
+        Persons selectedPersons,
+        Departments selectedDepartment)
     {
+        HostScreen = hostScreen;
+        _cardService = getService;
+        SelectedPerson = selectedPersons;
+        
+        // Загрузка сотрдуников на выбранный отдел
+        GetPersonsByDepartments = ReactiveCommand.CreateFromTask(async _ => 
+            await ApiGetListPersons(account , selectedDepartment.Id));
+        
+        var filter = this.WhenValueChanged(x => x.FilterName).Select(Filter);
+        _personsSourceList.Connect()
+            .Filter(filter)
+            .Delay(TimeSpan.FromMilliseconds(300))
+            .ObserveOn(RxApp.MainThreadScheduler)
+            .Bind(out _personsList)
+            .Subscribe();
+        
        this.WhenActivated((CompositeDisposable disposables) =>
        {
            GC.Collect();
+           
+           GetPersonsByDepartments.IsExecuting.ToProperty(this, x => x.IsBusy, out isBusy);
+           GetPersonsByDepartments.Execute()
+               .Subscribe(x => Console.WriteLine("OnNext: {0}", x))
+               .DisposeWith(disposables);
        });
     }
 }

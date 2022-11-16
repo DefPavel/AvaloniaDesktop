@@ -2,7 +2,98 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:model="using:AvaloniaDesktop.Models"
+             xmlns:vm="using:AvaloniaDesktop.ViewModels"
+             xmlns:i="using:Avalonia.Xaml.Interactivity"
+             xmlns:ia="using:Avalonia.Xaml.Interactions.Core"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="AvaloniaDesktop.Views.PersonCardView">
-    Welcome to Avalonia!
+    
+    <Design.DataContext>
+        <vm:PersonCardViewModel/>
+    </Design.DataContext>
+
+    <Grid 
+        ColumnDefinitions="300, *"
+        RowDefinitions="*, 23">
+        
+        <!--#region SideBar -->
+        <Grid
+            Grid.Row="0"
+            Grid.Column="0" RowDefinitions="60,45,35,*">
+            <StackPanel 
+                Margin="5 5 5 0"
+                Grid.Row="0">
+                <Button
+                    Command="{Binding GetBack}"
+                    Content="Вернуться на главное"/>
+                <Button
+                    Command="{Binding GetPersonsByDepartments}"
+                    Content="Отобразить всех"/>
+            </StackPanel>
+            
+            <StackPanel 
+                Margin="5 10 5 0"
+                Orientation="Horizontal"
+                Grid.Row="1">
+                
+                <RadioButton Name="IsAllRadio" Margin="5 0 5 0" IsChecked="True" Content="Обе категории">
+                    <i:Interaction.Behaviors>
+                        <ia:EventTriggerBehavior EventName="Checked" SourceObject="{Binding #IsAllRadio}">
+                            <ia:InvokeCommandAction Command="{Binding GetPersonsToNppAll}"/>
+                        </ia:EventTriggerBehavior>
+                    </i:Interaction.Behaviors>
+                </RadioButton>
+                
+                <RadioButton Name="IsPedRadio" Margin="5 0 5 0"  Content="НПП">
+                    <i:Interaction.Behaviors>
+                        <ia:EventTriggerBehavior EventName="Checked" SourceObject="{Binding #IsPedRadio}">
+                            <ia:InvokeCommandAction Command="{Binding GetPersonsToNpp}"/>
+                        </ia:EventTriggerBehavior>
+                    </i:Interaction.Behaviors>
+                </RadioButton>
+                
+                <RadioButton Name="IsNoPedRadio" Margin="5 0 5 0" Content="РСП И ОП">
+                    <i:Interaction.Behaviors>
+                        <ia:EventTriggerBehavior EventName="Checked" SourceObject="{Binding #IsNoPedRadio}">
+                            <ia:InvokeCommandAction Command="{Binding GetPersonsToNotNpp}"/>
+                        </ia:EventTriggerBehavior>
+                    </i:Interaction.Behaviors>
+                </RadioButton>
+            </StackPanel>
+            
+            <StackPanel 
+                Margin="5 0 5 0"
+                Grid.Row="2">
+                <Separator/>
+                <TextBox
+                    Watermark="Введите Фамилию"
+                    Text="{Binding 
+                    FilterName,
+                     Mode=TwoWay
+                    }"/>
+            </StackPanel>
+            <DataGrid 
+                Margin="10 0 10 0"
+                Name="PersonsGrid"
+                IsReadOnly="True"
+                AutoGenerateColumns="False"
+                Items="{Binding Path=PersonsList}"
+                SelectionMode="Single"
+                Grid.Row="3">
+                <DataGrid.Columns>
+                    <DataGridTextColumn 
+                        Header="Ф.И.О."
+                        Width="*"
+                        Binding="{Binding Path=FullName}"
+                        />
+                </DataGrid.Columns>
+                
+            </DataGrid>
+
+        </Grid>
+        <!--#endregion -->
+        
+        
+    </Grid>
 </UserControl>

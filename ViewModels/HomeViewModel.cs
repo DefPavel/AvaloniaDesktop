@@ -19,7 +19,10 @@ namespace AvaloniaDesktop.ViewModels;
 
 public sealed class HomeViewModel : ViewModelBase, IRoutableViewModel
 {
+    
     #region Свойства
+    
+    public RoutingState Router { get; } = new();
     [Reactive] public ObservableCollection<Departments> DepartmentsList { get; set; } = new();
     [Reactive] public Departments SelectedDepartments { get; set; } = new();
 
@@ -41,25 +44,22 @@ public sealed class HomeViewModel : ViewModelBase, IRoutableViewModel
     [Reactive] public string? FilterName { get; set; }
     [Reactive] public ObservableCollection<Position>? PositionsList { get; set; } = new();
     [Reactive] public Position SelectedPosition { get; set; } = new();
-
+    [Reactive] public Persons SelectedPersons { get; set; }
+    
     private readonly SourceList<Persons> _personsSourceList = new();
 
     private readonly ReadOnlyObservableCollection<Persons> _personsList;
     public ReadOnlyObservableCollection<Persons> PersonsList => _personsList;
 
-    private Persons _selectedPersons = new();
-    public Persons SelectedPersons
-    {
-        get => _selectedPersons;
-        set => this.RaiseAndSetIfChanged(ref _selectedPersons, value);
-    }
+    
+    
     public string UrlPathSegment => nameof(HomeViewModel);
     private readonly IHomeService? _homeService;
     private readonly Users _account;
     public IScreen HostScreen { get; }
     #endregion
     
-     #region Команды
+    #region Команды
     private ReactiveCommand<Unit, Unit> GetAllDepartment { get; }
     public ReactiveCommand<Unit, Unit> GetPersonsByDepartment { get; }
     public ReactiveCommand<Unit, Unit> NavigateToCard { get; }
@@ -85,10 +85,12 @@ public sealed class HomeViewModel : ViewModelBase, IRoutableViewModel
         TypePosition = allPositions.Select(variable => variable.Name).ToArray();
     }
 
-    private void GoToPersonCard(Users account)
+    private void GoToPersonCard(Users account , Persons persons, Departments departments)
     {
-        Console.Write(account);
-        HostScreen.Router.NavigateAndReset.Execute(new PersonCardViewModel(HostScreen, account));
+        // Console.Write(account);
+        //HostScreen.Router.NavigateAndReset.Execute(new PersonCardViewModel(HostScreen, account, persons, departments));
+        
+        Router.Navigate.Execute(new LoginViewModel(HostScreen));
     }
     private async Task GetPersonByTreeItemAsync()
     {
@@ -148,22 +150,23 @@ public sealed class HomeViewModel : ViewModelBase, IRoutableViewModel
         GetPersonsByDepartment = ReactiveCommand.CreateFromTask(async _ => await GetPersonByTreeItemAsync(), canExe);
         GetPersonsByDepartment.IsExecuting.ToProperty(this, x => x.IsBusy, out isBusy);
         
-        // Перейти к карточке сотрудника
-        var canGoToPerson = this.WhenAnyValue(x => x.SelectedPersons,
-            (item) => item.FullName.Length > 0);
         NavigateToCard = ReactiveCommand.Create(() =>
-            GoToPersonCard(account), canGoToPerson);
+        {
+            if (SelectedPersons != null)
+                GoToPersonCard(account, SelectedPersons, SelectedDepartments);
+        });
         
         NavigateToCard.IsExecuting.ToProperty(this, x => x.IsBusy, out isBusy);
         // Фильтр по фио
         var filter = this.WhenValueChanged(x => x.FilterName).Select(Filter);
         _personsSourceList.Connect()
             .Filter(filter)
+            .Delay(TimeSpan.FromMilliseconds(300))
             .ObserveOn(RxApp.MainThreadScheduler)
             .Bind(out _personsList)
             .Subscribe();
 
-        this.WhenActivated((CompositeDisposable disposables) =>
+        this.WhenActivated(disposables =>
         {
             GC.Collect();
             GetAllDepartment.IsExecuting.ToProperty(this, x => x.IsBusy, out isBusy);

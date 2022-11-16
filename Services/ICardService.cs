@@ -1,6 +1,10 @@
-﻿namespace AvaloniaDesktop.Services;
+﻿using System.Collections.ObjectModel;
+using System.Threading.Tasks;
+using AvaloniaDesktop.Models;
+
+namespace AvaloniaDesktop.Services;
 
 public interface ICardService
 {
-    
+    Task<ObservableCollection<Persons>> GetShortNamePersonsByDepartmentId(Users user, int idDepartment);
 }
