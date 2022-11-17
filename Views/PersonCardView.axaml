@@ -15,7 +15,7 @@
 
     <Grid 
         ColumnDefinitions="300, *"
-        RowDefinitions="*, 23">
+        RowDefinitions="*, 25">
         
         <!--#region SideBar -->
         <Grid
@@ -28,7 +28,7 @@
                     Command="{Binding GoBack}"
                     Content="Вернуться на главное"/>
                 <Button
-                    Command="{Binding GetPersonsByDepartments}"
+                    Command="{Binding GetAllPersons}"
                     Content="Отобразить всех"/>
             </StackPanel>
             
@@ -75,11 +75,11 @@
             </StackPanel>
             <DataGrid 
                 Margin="10 0 10 0"
-                Name="PersonsGrid"
+                Name="SotringGrid"
                 AutoGenerateColumns="False"
                 Items="{Binding Path=PersonsList}"
                 SelectionMode="Single"
-                SelectedItem="{Binding SelectedPerson}"
+                SelectedItem="{Binding Path=SelectedPerson}"
                 Grid.Row="3">
                 <DataGrid.Columns>
                     <DataGridTextColumn 
@@ -93,7 +93,29 @@
 
         </Grid>
         <!--#endregion -->
+        <TextBlock 
+            Margin="10 3 0 0"
+            Text="{Binding PersonsList.Count , StringFormat='Кол.записей: {0}'}"
+            Grid.Row="1"
+            Grid.Column="0"/>
         
+        <!--#region Content -->
+        <Grid
+            Grid.Row="0"
+            Grid.Column="1">
+            <StackPanel>
+                <TextBlock
+                    Classes="h3"
+                    Text="{Binding SelectedDepartments.Name}"
+                />
+                <TextBlock
+                    Classes="h3"
+                    Text="{Binding SelectedPerson.FullName}"
+                    />
+            </StackPanel>
+           
+        </Grid>
+        <!--#endregion -->
         
     </Grid>
 </UserControl>

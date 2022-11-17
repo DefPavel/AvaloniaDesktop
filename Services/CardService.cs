@@ -16,4 +16,10 @@ public class CardService : ICardService
         if (user == null) throw new ArgumentNullException(nameof(user));
         return await QueryService.JsonDeserializeObservable<Persons>(token: user!.Token, "/pers/person/get/short/" + idDepartment, "GET");
     }
+
+    public async Task<ObservableCollection<Persons>> GetAllPersons(Users user)
+    {
+        if (user == null) throw new ArgumentNullException(nameof(user));
+        return await QueryService.JsonDeserializeObservable<Persons>(token: user!.Token, "/pers/person/get/all", "GET");
+    }
 }

@@ -19,10 +19,9 @@ namespace AvaloniaDesktop.ViewModels;
 
 public sealed class HomeViewModel : ViewModelBase, IRoutableViewModel
 {
-    
     #region Свойства
     
-    public RoutingState Router { get; } = new();
+    // public RoutingState Router { get; } = new();
     [Reactive] public ObservableCollection<Departments> DepartmentsList { get; set; } = new();
     [Reactive] public Departments SelectedDepartments { get; set; } = new();
 
@@ -44,9 +43,9 @@ public sealed class HomeViewModel : ViewModelBase, IRoutableViewModel
     [Reactive] public string? FilterName { get; set; }
     [Reactive] public ObservableCollection<Position>? PositionsList { get; set; } = new();
     [Reactive] public Position SelectedPosition { get; set; } = new();
-    [Reactive] public Persons SelectedPersons { get; set; }
+    [Reactive] public Persons SelectedPersons { get; set; } = new();
     
-    private readonly SourceList<Persons> _personsSourceList = new();
+    private SourceList<Persons> _personsSourceList = new();
 
     private readonly ReadOnlyObservableCollection<Persons> _personsList;
     public ReadOnlyObservableCollection<Persons> PersonsList => _personsList;
@@ -95,18 +94,19 @@ public sealed class HomeViewModel : ViewModelBase, IRoutableViewModel
         // получить список сотрудников выбранного отдела
         var personsByDepartment = await _homeService!
             .GetPersonsByDepartment(_account, SelectedDepartments);
+        _personsSourceList.Clear();
+        _personsSourceList.AddRange(personsByDepartment);
+
+        SelectedPersons = PersonsList.FirstOrDefault()!;
+        
         // получить штатные должности выбранного отдела
         var positionByDepartment = await _homeService!.GetPositionsByDepartment(_account, SelectedDepartments);
         PositionsList = positionByDepartment;
 
-        _personsSourceList.Clear();
-        _personsSourceList.AddRange(personsByDepartment);
-
-        SelectedPersons =  personsByDepartment.FirstOrDefault()!;
-        SelectedPosition = positionByDepartment.FirstOrDefault()!;
+        SelectedPosition = PositionsList.FirstOrDefault()!;
         
-        // CountAllPerson = _personsList.DistinctBy(x => x.Id).Count();
-        // && x.IsMain == true
+
+        
         // Считаем сколько НПП
         CountIsPedPerson = _personsList.DistinctBy(x => x.Id).Count(x => x.IsPed);
         // Считаем сколько не НПП
@@ -139,6 +139,7 @@ public sealed class HomeViewModel : ViewModelBase, IRoutableViewModel
         HostScreen = hostScreen;
         _account = account;
         _homeService = homeService;
+        
         // Разрешить только если элемент выбран
         var canExe = this.WhenAnyValue(x => x.SelectedDepartments,
             (item) => item.Id > 0);
@@ -147,19 +148,14 @@ public sealed class HomeViewModel : ViewModelBase, IRoutableViewModel
         // Получить список сотрудников при выбаре отдела
         GetPersonsByDepartment = ReactiveCommand.CreateFromTask(async _ => await GetPersonByTreeItemAsync(), canExe);
         GetPersonsByDepartment.IsExecuting.ToProperty(this, x => x.IsBusy, out isBusy);
-        
-        NavigateToCard = ReactiveCommand.Create(() =>
-        {
-            if (SelectedPersons != null)
-                GoToPersonCard(account, SelectedPersons, SelectedDepartments);
-        });
+
+        NavigateToCard = ReactiveCommand.Create(() => { GoToPersonCard(account, SelectedPersons, SelectedDepartments); });
         
         NavigateToCard.IsExecuting.ToProperty(this, x => x.IsBusy, out isBusy);
         // Фильтр по фио
         var filter = this.WhenValueChanged(x => x.FilterName).Select(Filter);
         _personsSourceList.Connect()
             .Filter(filter)
-            .Delay(TimeSpan.FromMilliseconds(300))
             .ObserveOn(RxApp.MainThreadScheduler)
             .Bind(out _personsList)
             .Subscribe();
