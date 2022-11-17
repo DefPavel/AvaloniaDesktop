@@ -25,16 +25,26 @@ public sealed class PersonCardViewModel :  ViewModelBase, IRoutableViewModel
 
     #region Команды
     
+    private ReactiveCommand<Unit, Unit> GetInforationByPerson { get; }
+    private ReactiveCommand<Unit, Unit> GetPersonsByDepartments { get; }
     public ReactiveCommand<Unit, IRoutableViewModel?> GoBack { get; }
-    
     public ReactiveCommand<Unit, Unit> GetAllPersons { get; }
+    
+    
     #endregion
 
     #region Свойства
     [Reactive] public string? FilterName { get; set; }
-    [Reactive] public Persons SelectedPerson { get; set; } = new();
+
+    private Persons _selectedPerson = new();
+
+    public Persons SelectedPerson
+    {
+        get => _selectedPerson;
+        set => this.RaiseAndSetIfChanged(ref _selectedPerson, value);
+    }
     
-    [Reactive] public Departments SelectedDepartments { get; set; } = new();
+    [Reactive] public Departments SelectedDepartments { get; set; }
 
     #endregion
 
@@ -57,12 +67,21 @@ public sealed class PersonCardViewModel :  ViewModelBase, IRoutableViewModel
 
     #region Логика
     
+    // Информаци Личной карты сотрудника
+    private async Task ApiGetInfo(Users users)
+    {
+        var information = await _cardService!.GetInformationByPerson(users, SelectedPerson);
+        
+        // SelectedPerson = information;
+    }
+    // Фильтр
     private static Func<Persons, bool> Filter(string? filterName)
     {
         if (string.IsNullOrEmpty(filterName)) return _ => true;
         return x => x.FullName.ToUpper().StartsWith(filterName.ToUpper());
     }
 
+    // При переходе на персональную карту
     private async Task ApiGetListPersons(Users users, Departments departments , Persons persons)
     {
         var personsList = await _cardService!.GetShortNamePersonsByDepartmentId(users, departments.Id);
@@ -72,7 +91,7 @@ public sealed class PersonCardViewModel :  ViewModelBase, IRoutableViewModel
         SelectedPerson = PersonsList.FirstOrDefault(x => x.Id == persons.Id)!;
     }
     
-    
+    // Отобразить всех сотрудников в sidebar
     private async Task ApiGetListAllPersonsAsync(Users users)
     {
         var personsList = await _cardService!.GetAllPersons(users);
@@ -85,12 +104,6 @@ public sealed class PersonCardViewModel :  ViewModelBase, IRoutableViewModel
 
     #endregion
     
-    #region Команды
-
-    private ReactiveCommand<Unit, Unit> GetPersonsByDepartments { get; }
-    
-
-    #endregion
     
 
     public PersonCardViewModel(IScreen hostScreen , Users account , Persons selectedPersons, Departments selectedDepartment) :
@@ -118,7 +131,9 @@ public sealed class PersonCardViewModel :  ViewModelBase, IRoutableViewModel
             await ApiGetListPersons(account , selectedDepartment , selectedPersons));
         // Загрузить всех сотрудников
         GetAllPersons = ReactiveCommand.CreateFromTask(async _ => await ApiGetListAllPersonsAsync(account));
-        
+        // Загрузить информацию о сотруднике при выборе
+        GetInforationByPerson = ReactiveCommand.CreateFromTask(async _ => await ApiGetInfo(account));
+        // Фильтр
         var filter = this.WhenValueChanged(x => x.FilterName).Select(Filter);
         _personsSourceList.Connect()
             .Filter(filter)
@@ -133,7 +148,8 @@ public sealed class PersonCardViewModel :  ViewModelBase, IRoutableViewModel
            
            GetPersonsByDepartments.IsExecuting.ToProperty(this, x => x.IsBusy, out isBusy);
            GetPersonsByDepartments.Execute()
-               .Subscribe(x => Console.WriteLine("OnNext: {0}", x));
+               .Subscribe(x => Console.WriteLine("OnNext: {0}", x))
+               .DisposeWith(disposables);
        });
     }
 }

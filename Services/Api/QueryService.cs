@@ -84,5 +84,21 @@ public class QueryService
     }
     #endregion
 
+    public static async ValueTask<T> JsonObjectWithToken<T>(string token, string queryUrl, string httpMethod) where T : new()
+    {
+#pragma warning disable SYSLIB0014 // Тип или член устарел
+        var req = (HttpWebRequest)WebRequest.Create(ApiUrl + queryUrl);     // Создаём запрос
+#pragma warning restore SYSLIB0014 // Тип или член устарел
+        req.Method = httpMethod;                                                        // Выбираем метод запроса
+        req.Headers.Add("auth-token", token);
+        req.Accept = "application/json";
+
+        using var response = await req.GetResponseAsync();
+
+        await using var responseStream = response.GetResponseStream();
+        using StreamReader reader = new(responseStream, Encoding.UTF8);
+        return JsonSerializer.Deserialize<T>(await reader.ReadToEndAsync())
+               ?? throw new NullReferenceException();    // Возвращаем json информацию которая пришла 
+    }
 }
 

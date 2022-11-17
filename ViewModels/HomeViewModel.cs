@@ -155,6 +155,7 @@ public sealed class HomeViewModel : ViewModelBase, IRoutableViewModel
         // Фильтр по фио
         var filter = this.WhenValueChanged(x => x.FilterName).Select(Filter);
         _personsSourceList.Connect()
+            //.Throttle(TimeSpan.FromSeconds(0.8), RxApp.TaskpoolScheduler)
             .Filter(filter)
             .ObserveOn(RxApp.MainThreadScheduler)
             .Bind(out _personsList)

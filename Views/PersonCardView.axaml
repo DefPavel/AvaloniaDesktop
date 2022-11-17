@@ -75,12 +75,17 @@
             </StackPanel>
             <DataGrid 
                 Margin="10 0 10 0"
-                Name="SotringGrid"
+                Name="SortedGrid"
                 AutoGenerateColumns="False"
                 Items="{Binding Path=PersonsList}"
                 SelectionMode="Single"
                 SelectedItem="{Binding Path=SelectedPerson}"
                 Grid.Row="3">
+                <i:Interaction.Behaviors>
+                    <ia:EventTriggerBehavior EventName="Tapped" SourceObject="{Binding #SortedGrid}">
+                        <ia:InvokeCommandAction Command="{Binding GetInforationByPerson}"/>
+                    </ia:EventTriggerBehavior>
+                </i:Interaction.Behaviors>
                 <DataGrid.Columns>
                     <DataGridTextColumn 
                         Header="Ф.И.О."
@@ -112,6 +117,13 @@
                     Classes="h3"
                     Text="{Binding SelectedPerson.FullName}"
                     />
+                <Image 
+                    Stretch="Fill"
+                    MinHeight="140"
+                    Source="{Binding SelectedPerson.Photo}"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Top"
+                    StretchDirection="DownOnly" Width="98" Height="32" />
             </StackPanel>
            
         </Grid>

@@ -10,7 +10,6 @@ namespace AvaloniaDesktop.Services;
 
 public class CardService : ICardService
 {
-
     public async Task<ObservableCollection<Persons>> GetShortNamePersonsByDepartmentId(Users user , int idDepartment )
     {
         if (user == null) throw new ArgumentNullException(nameof(user));
@@ -21,5 +20,11 @@ public class CardService : ICardService
     {
         if (user == null) throw new ArgumentNullException(nameof(user));
         return await QueryService.JsonDeserializeObservable<Persons>(token: user!.Token, "/pers/person/get/all", "GET");
+    }
+
+    public async Task<Persons> GetInformationByPerson(Users user , Persons persons)
+    {
+        if (user == null) throw new ArgumentNullException(nameof(user));
+        return await QueryService.JsonObjectWithToken<Persons>(token: user!.Token, "/pers/person/card/" + persons.Id, "GET");
     }
 }
