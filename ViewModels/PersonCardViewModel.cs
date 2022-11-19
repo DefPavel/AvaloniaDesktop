@@ -5,6 +5,7 @@ using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
+using Avalonia.Media.Imaging;
 using AvaloniaDesktop.Models;
 using AvaloniaDesktop.Services;
 using AvaloniaDesktop.Services.Api;
@@ -25,7 +26,7 @@ public sealed class PersonCardViewModel :  ViewModelBase, IRoutableViewModel
 
     #region Команды
     
-    private ReactiveCommand<Unit, Unit> GetInforationByPerson { get; }
+    public ReactiveCommand<Unit, Unit> GetInforationByPerson { get; }
     private ReactiveCommand<Unit, Unit> GetPersonsByDepartments { get; }
     public ReactiveCommand<Unit, IRoutableViewModel?> GoBack { get; }
     public ReactiveCommand<Unit, Unit> GetAllPersons { get; }
@@ -35,16 +36,11 @@ public sealed class PersonCardViewModel :  ViewModelBase, IRoutableViewModel
 
     #region Свойства
     [Reactive] public string? FilterName { get; set; }
-
-    private Persons _selectedPerson = new();
-
-    public Persons SelectedPerson
-    {
-        get => _selectedPerson;
-        set => this.RaiseAndSetIfChanged(ref _selectedPerson, value);
-    }
+    [Reactive] public Persons SelectedPerson { get; set; }
+    [Reactive] public Persons InforamationPerson { get; set; }
     
     [Reactive] public Departments SelectedDepartments { get; set; }
+    [Reactive] public string TitleDepartment { get; set; }
 
     #endregion
 
@@ -71,8 +67,9 @@ public sealed class PersonCardViewModel :  ViewModelBase, IRoutableViewModel
     private async Task ApiGetInfo(Users users)
     {
         var information = await _cardService!.GetInformationByPerson(users, SelectedPerson);
-        
-        // SelectedPerson = information;
+
+        InforamationPerson = information;
+        TitleDepartment = information.ArrayPosition[0].DepartmentName;
     }
     // Фильтр
     private static Func<Persons, bool> Filter(string? filterName)
@@ -87,7 +84,7 @@ public sealed class PersonCardViewModel :  ViewModelBase, IRoutableViewModel
         var personsList = await _cardService!.GetShortNamePersonsByDepartmentId(users, departments.Id);
         _personsSourceList.Clear();
         _personsSourceList.AddRange(personsList);
-        SelectedDepartments = departments;
+        TitleDepartment = departments.Name;
         SelectedPerson = PersonsList.FirstOrDefault(x => x.Id == persons.Id)!;
     }
     

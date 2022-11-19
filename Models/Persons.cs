@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Configuration;
 using System.Text.Json.Serialization;
 using ReactiveUI;
@@ -28,6 +29,10 @@ public sealed class Persons : ReactiveObject
     [JsonPropertyName("adress_rus")] [Reactive] public string AdressRus { get; set; } = string.Empty;
     [JsonPropertyName("data_start_contract")] [Reactive] public DateTime? StartDateContract { get; set; } 
     [JsonPropertyName("data_end_contract")] [Reactive] public DateTime? EndDateContract { get; set; }
+
+    [JsonPropertyName("id_dep")] [Reactive] public int IdDepartment { get; set; }
+
+    [JsonPropertyName("name_depart")] [Reactive] public string DepartmentName { get; set; } = string.Empty;
 
     #region Место рождения 
     // город
@@ -142,6 +147,12 @@ public sealed class Persons : ReactiveObject
 
     [JsonPropertyName("is_snils")]
     public bool IsSnils { get; set; }
+
+    #endregion
+
+    #region Массивы
+
+    [JsonPropertyName("positionsOfDepartment")] [Reactive] public ObservableCollection<Position> ArrayPosition { get; set; } = new();
 
     #endregion
 

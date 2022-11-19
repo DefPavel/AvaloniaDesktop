@@ -401,7 +401,7 @@
 				
 				<TabItem 
 					IsSelected="True"
-					Header="{Binding SelectedPersons.FirstName}">
+					Header="Сотрудники">
 					<Grid 
 						RowDefinitions="45, *, 25">
 						<StackPanel 

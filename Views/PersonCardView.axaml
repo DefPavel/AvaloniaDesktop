@@ -3,6 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:model="using:AvaloniaDesktop.Models"
+             xmlns:asyncImageLoader="clr-namespace:AsyncImageLoader;assembly=AsyncImageLoader.Avalonia"
              xmlns:vm="using:AvaloniaDesktop.ViewModels"
              xmlns:i="using:Avalonia.Xaml.Interactivity"
              xmlns:ia="using:Avalonia.Xaml.Interactions.Core"
@@ -106,25 +107,102 @@
         
         <!--#region Content -->
         <Grid
+            RowDefinitions="35,35, *"
             Grid.Row="0"
             Grid.Column="1">
-            <StackPanel>
+            
+   
                 <TextBlock
+                    Grid.Row="0"
                     Classes="h3"
-                    Text="{Binding SelectedDepartments.Name}"
-                />
+                    Text="{Binding TitleDepartment}"/>
+                <Separator 
+                    Grid.Row="0" Background="#BDBDBD" VerticalAlignment="Bottom" Height="2"/>
+                
                 <TextBlock
+                    Grid.Row="1"
                     Classes="h3"
-                    Text="{Binding SelectedPerson.FullName}"
-                    />
-                <Image 
-                    Stretch="Fill"
-                    MinHeight="140"
-                    Source="{Binding SelectedPerson.Photo}"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Top"
-                    StretchDirection="DownOnly" Width="98" Height="32" />
-            </StackPanel>
+                    Text="{Binding InforamationPerson.FullName}"/>
+                
+                <Separator 
+                    Grid.Row="1" Background="#BDBDBD" VerticalAlignment="Bottom" Height="2"/>
+    
+            
+            <TabControl 
+                Background="White"
+                BorderThickness="1"
+                BorderBrush="#BDBDBD"
+                Margin="5"
+                Grid.Row="2">
+                <TabItem 
+                    FontSize="13"
+                    Header="Личная карта">
+                    <ScrollViewer>
+                        <Grid RowDefinitions="300,*,*,*">
+                            <Grid
+                                Margin="5"
+                                Grid.Row="0"
+                                ColumnDefinitions="120,*,*">
+                                    <StackPanel 
+                                        Grid.Column="0">
+                                        <Border
+                                            Padding="5"
+                                            MinHeight="140"
+                                            BorderBrush="#BDBDBD"
+                                            BorderThickness="1"
+                                            >
+                                            <Image 
+                                                Stretch="Fill"
+                                                asyncImageLoader:ImageLoader.Source="{Binding InforamationPerson.Photo}"
+                    
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                StretchDirection="DownOnly" />     
+                                        </Border>
+                                       
+                                        <TextBlock 
+                                            VerticalAlignment="Center"
+                                            HorizontalAlignment="Center"
+                                            Text="Дата приёма"/>
+                                       
+                                        <!--<MaskedTextBox 
+                                            HorizontalContentAlignment="Center"
+                                            Text="{Binding InforamationPerson.DateWorking}"
+                                            Watermark="Дата приёма"
+                                            Mask="00.00.0000" />-->
+                                        <TextBox 
+                                            Text="{Binding InforamationPerson.DateWorking}"
+                                            />
+                                        <Button 
+                                            VerticalAlignment="Center"
+                                            HorizontalAlignment="Center"
+                                            Background="#B71C1C"
+                                            Foreground="White"
+                                            Width="110"
+                                            Content="Сохранить"/> 
+                                    </StackPanel>
+                                </Grid>
+                            
+                        </Grid>     
+                    </ScrollViewer>
+                   
+                </TabItem>
+                <TabItem Header="Работа">
+                    Работа
+                </TabItem>
+                <TabItem Header="Паспорт">
+                    Паспорт
+                </TabItem>
+                <TabItem Header="Сканы документов">
+                    Сканы
+                </TabItem>
+                <TabItem Header="Образование">
+                    Образование
+                </TabItem>
+                
+            </TabControl>
+            
+            
            
         </Grid>
         <!--#endregion -->

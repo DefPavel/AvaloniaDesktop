@@ -97,7 +97,7 @@ public sealed class HomeViewModel : ViewModelBase, IRoutableViewModel
         _personsSourceList.Clear();
         _personsSourceList.AddRange(personsByDepartment);
 
-        SelectedPersons = PersonsList.FirstOrDefault()!;
+        //SelectedPersons = PersonsList.FirstOrDefault()!;
         
         // получить штатные должности выбранного отдела
         var positionByDepartment = await _homeService!.GetPositionsByDepartment(_account, SelectedDepartments);
