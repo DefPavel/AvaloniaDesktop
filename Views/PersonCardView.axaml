@@ -7,6 +7,8 @@
              xmlns:vm="using:AvaloniaDesktop.ViewModels"
              xmlns:i="using:Avalonia.Xaml.Interactivity"
              xmlns:ia="using:Avalonia.Xaml.Interactions.Core"
+             xmlns:sys="clr-namespace:System;assembly=System.Runtime"
+             xmlns:helpers="clr-namespace:AvaloniaDesktop.Helpers"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="AvaloniaDesktop.Views.PersonCardView">
     
@@ -137,6 +139,10 @@
                 <TabItem 
                     FontSize="13"
                     Header="Личная карта">
+                    <TabItem.Resources>
+                        <helpers:CustomDateConverter 
+                            x:Key="ConvertDate" />
+                    </TabItem.Resources>
                     <ScrollViewer>
                         <Grid RowDefinitions="300,*,*,*">
                             <Grid
@@ -164,15 +170,16 @@
                                             VerticalAlignment="Center"
                                             HorizontalAlignment="Center"
                                             Text="Дата приёма"/>
-                                       
-                                        <!--<MaskedTextBox 
-                                            HorizontalContentAlignment="Center"
-                                            Text="{Binding InforamationPerson.DateWorking}"
-                                            Watermark="Дата приёма"
-                                            Mask="00.00.0000" />-->
-                                        <TextBox 
-                                            Text="{Binding InforamationPerson.DateWorking}"
-                                            />
+
+                                        <!--<TextBox 
+                                            Text="{Binding InforamationPerson.DateWorking, StringFormat={}{0:yyyy}}"
+                                            />-->
+                                        
+                                        <!--<TextBox 
+                                            HorizontalContentAlignment="Stretch"
+                                            Text="{Binding "/>-->
+                                        <TextBox Text="{Binding InforamationPerson.DateWorking,
+                                        Converter={StaticResource ConvertDate}}" />
                                         <Button 
                                             VerticalAlignment="Center"
                                             HorizontalAlignment="Center"

@@ -156,25 +156,20 @@ public sealed class Persons : ReactiveObject
 
     #endregion
 
-    [JsonPropertyName("stavka_budget")]
-    public decimal StavkaBudget { get; set; }
+    [JsonPropertyName("stavka_budget")] [Reactive] public decimal StavkaBudget { get; set; }
 
-    [JsonPropertyName("stavka_nobudget")]
-    public decimal StavkaNoBudget { get; set; }
+    [JsonPropertyName("stavka_nobudget")] [Reactive] public decimal StavkaNoBudget { get; set; }
 
-    [JsonPropertyName("identification_code")]
-    public string IdentificationCode { get; set; } = string.Empty;
+    [JsonPropertyName("identification_code")] [Reactive] public string IdentificationCode { get; set; } = string.Empty;
 
-    [JsonPropertyName("full_age")]
-    public FullAge? FullAge { get; set; }
+    [JsonPropertyName("full_age")] public FullAge? FullAge { get; set; }
 
-    [JsonPropertyName("date_working")]
-    public DateTime? DateWorking { get; set; }
+    [JsonPropertyName("date_working")] [Reactive] public DateTime? DateWorking { get; set; }
 
-    [JsonPropertyName("date_order")] public DateTime? DateOrder { get; set; }
+    [JsonPropertyName("date_order")] [Reactive] public DateTime? DateOrder { get; set; }
 
-    [JsonPropertyName("order")] public string OrderName { get; set; } = string.Empty;
+    [JsonPropertyName("order")] [Reactive] public string OrderName { get; set; } = string.Empty;
 
-    [JsonPropertyName("date_insert")] public DateTime? OrderDate { get; set; }
-    [JsonPropertyName("position")] public string PersonPosition { get; set; } = string.Empty;
+    [JsonPropertyName("date_insert")] [Reactive] public DateTime? OrderDate { get; set; }
+    [JsonPropertyName("position")] [Reactive] public string PersonPosition { get; set; } = string.Empty;
 }

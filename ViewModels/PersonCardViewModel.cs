@@ -36,11 +36,11 @@ public sealed class PersonCardViewModel :  ViewModelBase, IRoutableViewModel
 
     #region Свойства
     [Reactive] public string? FilterName { get; set; }
-    [Reactive] public Persons SelectedPerson { get; set; }
-    [Reactive] public Persons InforamationPerson { get; set; }
+    [Reactive] public Persons? SelectedPerson { get; set; }
+    [Reactive] public Persons? InforamationPerson { get; set; }
     
-    [Reactive] public Departments SelectedDepartments { get; set; }
-    [Reactive] public string TitleDepartment { get; set; }
+    [Reactive] public Departments? SelectedDepartments { get; set; }
+    [Reactive] public string? TitleDepartment { get; set; }
 
     #endregion
 
@@ -66,7 +66,7 @@ public sealed class PersonCardViewModel :  ViewModelBase, IRoutableViewModel
     // Информаци Личной карты сотрудника
     private async Task ApiGetInfo(Users users)
     {
-        var information = await _cardService!.GetInformationByPerson(users, SelectedPerson);
+        var information = await _cardService!.GetInformationByPerson(users, SelectedPerson!);
 
         InforamationPerson = information;
         TitleDepartment = information.ArrayPosition[0].DepartmentName;
