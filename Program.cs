@@ -1,6 +1,8 @@
 using Avalonia;
 using Avalonia.ReactiveUI;
 using System;
+using Avalonia.Svg;
+
 
 namespace AvaloniaDesktop;
 
@@ -12,7 +14,10 @@ public static class Program
 
     // Avalonia configuration, don't remove; also used by visual designer.
     private static AppBuilder BuildAvaloniaApp()
-        => AppBuilder.Configure<App>()
+    {
+        GC.KeepAlive(typeof(SvgImageExtension).Assembly);
+        GC.KeepAlive(typeof(Avalonia.Svg.Svg).Assembly);
+        return AppBuilder.Configure<App>()
             .UsePlatformDetect()
             .With(new X11PlatformOptions
             {
@@ -27,5 +32,8 @@ public static class Program
             .UseSkia()
             .LogToTrace()
             .UseReactiveUI();
+        
+    }
+        
 }
 

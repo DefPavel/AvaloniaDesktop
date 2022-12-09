@@ -8,9 +8,112 @@
     <Design.DataContext>
         <vm:GlobalSearchViewModel/>
     </Design.DataContext>
-    <Button 
-        Content="Назад"
-        Command="{Binding GoBack }"
-        Width="100"
-        />
+
+    <Grid>
+        <Separator Grid.Row="0" Background="#BDBDBD" 
+                   VerticalAlignment="Top" 
+                   Height="2"/>
+        <Border 
+           BoxShadow="3 3 10 2 #BDBDBD"
+           BorderThickness="2"
+           CornerRadius="3"
+           Background="White"
+           Margin="10"
+           >
+            <Grid RowDefinitions="35, *">
+                <TextBlock 
+                    HorizontalAlignment="Center"
+                    Text="Глобальный поиск"
+                    Classes="h3"
+                    Grid.Row="0"/>
+                <Button
+                    Background="#086f9e"
+                    Foreground="White"
+                    HorizontalAlignment="Left"
+                    Grid.Row="0"
+                    Command="{Binding GoBack}">
+                    <Svg Path="/Assets/back.svg"/>
+                </Button>   
+                
+              <TabControl Grid.Row="1" Margin="10">
+               <TabItem Header="Сотрудники">
+                   <Grid
+                       ColumnDefinitions="*, 35"
+                       RowDefinitions="40, *"
+                   >
+                       <TextBox 
+                           Watermark="Введите Фамилию"
+                           Text="{Binding SearchQuery, Mode=TwoWay}"
+                           Margin="5"
+                           Grid.Column="0" 
+                           Grid.Row="0"/>
+                       <Button 
+                           Background="#086f9e"
+                           Foreground="White"
+                           Margin="5"
+                           Command="{Binding SearchPerson}"
+                           HotKey="Return"
+                           Grid.Column="1" 
+                           Grid.Row="0">
+                           <Svg Path="/Assets/search.svg"/> 
+                       </Button>
+                       <DataGrid
+                           CanUserResizeColumns="True"
+                           IsReadOnly="True"
+                           AutoGenerateColumns="False"
+                           Margin="5"
+                           SelectionMode="Single"
+                           Items="{Binding Path=PersonsList}"
+                           Grid.ColumnSpan="2"
+                           Grid.Column="0"
+                           Grid.Row="1">
+                           <DataGrid.Columns>
+                               <DataGridCheckBoxColumn
+                                   Width="50"
+                                   Header="Осн.место"
+                                   Binding="{Binding Path=IsMain ,TargetNullValue={x:Null}}"/>
+                               <DataGridCheckBoxColumn
+                                   Width="40"
+                                   Header="НПП"
+                                   Binding="{Binding Path=IsPed ,TargetNullValue={x:Null}}" />
+                               <DataGridTextColumn 
+                                   Header="Фамилия"
+                                   Binding="{Binding Path=FirstName}"/>
+                               <DataGridTextColumn 
+                                   Header="Имя"
+                                   Binding="{Binding Path=MidlleName}"/>
+                               <DataGridTextColumn 
+                                   Header="Отчество"
+                                   Binding="{Binding Path=LastName}"/>
+                               <DataGridTextColumn 
+                                   Header="Должность"
+                                   Binding="{Binding Path=PersonPosition}"/>
+                               <DataGridTextColumn 
+                                   Width="50"
+                                   Header="Бюджет"
+                                   Binding="{Binding Path=StavkaBudget}"/>
+                               <DataGridTextColumn 
+                                   Width="50"
+                                   Header="Внебюджет"
+                                   Binding="{Binding Path=StavkaNoBudget}"/>
+                               <DataGridTextColumn
+                                   Header="Телефон Луг."
+                                   Binding="{Binding Path=PhoneLugakom}"/>
+                           </DataGrid.Columns>
+            
+                       </DataGrid>
+                    
+                   </Grid>
+               </TabItem>
+               <TabItem 
+                   Header="Подразделения">
+                
+               </TabItem>
+           </TabControl>    
+            </Grid>
+        
+       </Border>
+       
+        
+    </Grid>
 </UserControl>

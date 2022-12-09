@@ -73,40 +73,33 @@ public sealed class HomeViewModel : ViewModelBase, IRoutableViewModel
     // Загрузка дерева
     private async Task LoadedTreeAsync()
     {
-        var departments = await _homeService!
-            .GetTreeDepartments(_account);
-        DepartmentsList = new ObservableCollection<Departments>(departments);
-        
+        // получить все отделы
+        var taskDepartments = _homeService!.GetTreeDepartments(_account);
         // получить все должности
-        var allPositions = await _homeService!.GetAllPosition(_account);
-        TypePosition = allPositions.Select(variable => variable.Name).ToArray();
+        var taskPositions = _homeService!.GetAllPosition(_account);
+        // wait Promise.All
+        await Task.WhenAll(taskDepartments, taskPositions);
+        TypePosition = taskPositions.Result.Select(variable => variable.Name).ToArray();
+        DepartmentsList = new ObservableCollection<Departments>(taskDepartments.Result);
     }
 
-    private void GoToPersonCard(Users account , Persons persons, Departments departments)
+    private async Task GoToPersonCard(Users account , Persons persons, Departments departments)
     {
-        // Console.Write(account);
-        //HostScreen.Router.NavigateAndReset.Execute(new PersonCardViewModel(HostScreen, account, persons, departments));
-        HostScreen.Router.Navigate.Execute(new PersonCardViewModel(HostScreen, account, persons, departments));
-        // Router.Navigate.Execute(new LoginViewModel(HostScreen));
+        await HostScreen.Router.Navigate.Execute(new PersonCardViewModel(HostScreen, account, persons, departments));
     }
     private async Task GetPersonByTreeItemAsync()
     {
+        var taskPersonsByDepartment = _homeService!.GetPersonsByDepartment(_account, SelectedDepartments);
+        var taskPositionsByDepartment = _homeService!.GetPositionsByDepartment(_account, SelectedDepartments);
+        // wait Promise.All
+        await Task.WhenAll(taskPersonsByDepartment, taskPositionsByDepartment);
         // получить список сотрудников выбранного отдела
-        var personsByDepartment = await _homeService!
-            .GetPersonsByDepartment(_account, SelectedDepartments);
         _personsSourceList.Clear();
-        _personsSourceList.AddRange(personsByDepartment);
-
-        //SelectedPersons = PersonsList.FirstOrDefault()!;
-        
+        _personsSourceList.AddRange(taskPersonsByDepartment.Result);
         // получить штатные должности выбранного отдела
-        var positionByDepartment = await _homeService!.GetPositionsByDepartment(_account, SelectedDepartments);
-        PositionsList = positionByDepartment;
-
+        PositionsList = taskPositionsByDepartment.Result;
         SelectedPosition = PositionsList.FirstOrDefault()!;
-        
 
-        
         // Считаем сколько НПП
         CountIsPedPerson = _personsList.DistinctBy(x => x.Id).Count(x => x.IsPed);
         // Считаем сколько не НПП
@@ -149,7 +142,7 @@ public sealed class HomeViewModel : ViewModelBase, IRoutableViewModel
         GetPersonsByDepartment = ReactiveCommand.CreateFromTask(async _ => await GetPersonByTreeItemAsync(), canExe);
         GetPersonsByDepartment.IsExecuting.ToProperty(this, x => x.IsBusy, out isBusy);
 
-        NavigateToCard = ReactiveCommand.Create(() => { GoToPersonCard(account, SelectedPersons, SelectedDepartments); });
+        NavigateToCard = ReactiveCommand.CreateFromTask(async _ => await GoToPersonCard(account, SelectedPersons, SelectedDepartments));
         
         NavigateToCard.IsExecuting.ToProperty(this, x => x.IsBusy, out isBusy);
         // Фильтр по фио
