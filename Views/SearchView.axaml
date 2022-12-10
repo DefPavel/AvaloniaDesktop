@@ -10,9 +10,6 @@
     </Design.DataContext>
 
     <Grid>
-        <Separator Grid.Row="0" Background="#BDBDBD" 
-                   VerticalAlignment="Top" 
-                   Height="2"/>
         <Border 
            BoxShadow="3 3 10 2 #BDBDBD"
            BorderThickness="2"

@@ -75,6 +75,10 @@ public sealed class LoginViewModel : ViewModelBase, IRoutableViewModel
         Users account;
         try
         {
+            /*var messageBoxStandardWindow = MessageBox.Avalonia.MessageBoxManager
+              .GetMessageBoxStandardWindow("title", "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed...");
+            await messageBoxStandardWindow.Show();
+            */
             account = await _loginService!.Authentication(Username!, Password!);
             await HostScreen.Router.NavigateAndReset.Execute(new LayoutViewModel(HostScreen, account));
 
