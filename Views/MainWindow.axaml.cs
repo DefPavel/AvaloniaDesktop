@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
 using AvaloniaDesktop.ViewModels;
 using ReactiveUI;
@@ -18,6 +19,10 @@ namespace AvaloniaDesktop.Views
             #if DEBUG
             this.AttachDevTools();
             #endif
+        }
+        private void InitializeComponent()
+        {
+            AvaloniaXamlLoader.Load(this);
         }
     }
 }

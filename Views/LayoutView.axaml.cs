@@ -1,4 +1,5 @@
 using System.Reactive.Disposables;
+using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
 using AvaloniaDesktop.ViewModels;
 using ReactiveUI;
@@ -13,5 +14,9 @@ public partial class LayoutView : ReactiveUserControl<LayoutViewModel>
         });
 
         InitializeComponent();
+    }
+    private void InitializeComponent()
+    {
+        AvaloniaXamlLoader.Load(this);
     }
 }

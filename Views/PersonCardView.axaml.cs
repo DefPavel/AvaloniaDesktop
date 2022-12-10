@@ -1,4 +1,5 @@
 ﻿using System.Reactive.Disposables;
+using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
 using AvaloniaDesktop.ViewModels;
 using ReactiveUI;
@@ -14,5 +15,9 @@ public partial class PersonCardView : ReactiveUserControl<PersonCardViewModel>
             Disposable.Create(() => { }).DisposeWith(disposables);
         });
         InitializeComponent();
+    }
+    private void InitializeComponent()
+    {
+        AvaloniaXamlLoader.Load(this);
     }
 }

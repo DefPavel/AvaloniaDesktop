@@ -79,7 +79,7 @@ public sealed class HomeViewModel : ViewModelBase, IRoutableViewModel
         var taskPositions = _homeService!.GetAllPosition(_account);
         // wait Promise.All
         await Task.WhenAll(taskDepartments, taskPositions);
-        TypePosition = taskPositions.Result.Select(variable => variable.Name).ToArray();
+        TypePosition = taskPositions.Result.Select(variable => variable.Name.Trim()).ToArray();
         DepartmentsList = new ObservableCollection<Departments>(taskDepartments.Result);
     }
 
@@ -98,7 +98,7 @@ public sealed class HomeViewModel : ViewModelBase, IRoutableViewModel
         _personsSourceList.AddRange(taskPersonsByDepartment.Result);
         // получить штатные должности выбранного отдела
         PositionsList = taskPositionsByDepartment.Result;
-        SelectedPosition = PositionsList.FirstOrDefault()!;
+        //SelectedPosition = PositionsList.FirstOrDefault()!;
 
         // Считаем сколько НПП
         CountIsPedPerson = _personsList.DistinctBy(x => x.Id).Count(x => x.IsPed);

@@ -62,7 +62,6 @@
 					Margin="5"
 					IsChecked="{Binding Path=IsRememberMe}"/>
 				<Button
-					Name="LoginButton"
 					Width="80"
 					Grid.Column="1"
 					Grid.Row="6"

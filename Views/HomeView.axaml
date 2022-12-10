@@ -178,8 +178,9 @@
 							Grid.Column="0">
 							
 							<DataGrid.Columns>
-								
-								<!--<DataGridTemplateColumn Header="Должность 2">
+
+								<!--
+								<DataGridTemplateColumn Header="Должность 2">
 									<DataGridTemplateColumn.CellTemplate>
 										<DataTemplate DataType="model:Position">
 											<TextBlock Text="{Binding Name}" VerticalAlignment="Center" HorizontalAlignment="Center" />
@@ -197,8 +198,6 @@
 										</DataTemplate>
 									</DataGridTemplateColumn.CellEditingTemplate>
 								</DataGridTemplateColumn>-->
-								
-								
 								<DataGridTemplateColumn Header="Должность">
 									<DataGridTemplateColumn.CellTemplate>
 										<DataTemplate DataType="model:Position">
