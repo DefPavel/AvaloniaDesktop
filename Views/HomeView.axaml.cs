@@ -1,4 +1,5 @@
 using System.Reactive.Disposables;
+using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
 using AvaloniaDesktop.ViewModels;
@@ -20,5 +21,6 @@ namespace AvaloniaDesktop.Views
         {
             AvaloniaXamlLoader.Load(this);
         }
+        
     }
 }
