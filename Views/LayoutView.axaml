@@ -1,41 +1,42 @@
-<UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:vm="using:AvaloniaDesktop.ViewModels"
-             xmlns:rxui="http://reactiveui.net"
-             xmlns:helpers="clr-namespace:AvaloniaDesktop.Helpers;assembly=AvaloniaDesktop"
+<UserControl
+	xmlns="https://github.com/avaloniaui"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:vm="using:AvaloniaDesktop.ViewModels"
+	xmlns:rxui="http://reactiveui.net"
+	xmlns:helpers="clr-namespace:AvaloniaDesktop.Helpers;assembly=AvaloniaDesktop"
              Foreground="{DynamicResource ThemeForegroundBrush}"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             mc:Ignorable="d"
+             d:DesignWidth="800"
+             d:DesignHeight="450"
              x:Class="AvaloniaDesktop.Views.LayoutView">
-    
-    <Design.DataContext>
-        <vm:LayoutViewModel/>
-    </Design.DataContext>
-    
-    <Grid RowDefinitions=" Auto,* ">
-        <Menu
-           Focusable="False"
-            Grid.Row="0">
-            <MenuItem Header="File">
-                <MenuItem 
-                    Command="{Binding Search}"
-                    Header="Поиск"/>
-                <MenuItem Header="Настройки"/>
-                <MenuItem 
-                    Command="{Binding Path=Logout}"
-                    Header="Выйти из аккаунта"/>
-            </MenuItem>
-            <MenuItem Header="File"/>
-        </Menu>
-		
-        <rxui:RoutedViewHost Name="WorkspaceRoutedViewHost" Grid.Row="1" 
-                             Router="{Binding Router}" PageTransition="{x:Static helpers:Transitions.Fade}">
-            <rxui:RoutedViewHost.DefaultContent>
-                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                    <TextBlock Text="Загрузка..." HorizontalAlignment="Center" TextAlignment="Center"/>
-                </StackPanel>
-            </rxui:RoutedViewHost.DefaultContent>
-        </rxui:RoutedViewHost>
-    </Grid>
+	<Design.DataContext>
+		<vm:LayoutViewModel />
+	</Design.DataContext>
+	<Grid RowDefinitions=" Auto,* ">
+		<Menu Focusable="False"
+              Grid.Row="0">
+			<MenuItem Header="File">
+				<MenuItem Command="{Binding Search}"
+                          Header="Поиск" />
+				<MenuItem Header="Настройки" />
+				<MenuItem Command="{Binding Path=Logout}"
+                          Header="Выйти из аккаунта" /></MenuItem>
+			<MenuItem Header="File" />
+		</Menu>
+		<rxui:RoutedViewHost Name="WorkspaceRoutedViewHost"
+                             Grid.Row="1"
+                             Router="{Binding Router}"
+                             PageTransition="{x:Static helpers:Transitions.Fade}">
+			<rxui:RoutedViewHost.DefaultContent>
+				<StackPanel VerticalAlignment="Center"
+                            HorizontalAlignment="Center">
+					<TextBlock Text="Загрузка..."
+                               HorizontalAlignment="Center"
+                               TextAlignment="Center" />
+				</StackPanel>
+			</rxui:RoutedViewHost.DefaultContent>
+		</rxui:RoutedViewHost>
+	</Grid>
 </UserControl>

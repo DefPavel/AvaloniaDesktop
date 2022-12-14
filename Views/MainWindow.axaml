@@ -1,32 +1,36 @@
-<Window xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:vm="using:AvaloniaDesktop.ViewModels"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+<Window
+	xmlns="https://github.com/avaloniaui"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:vm="using:AvaloniaDesktop.ViewModels"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        d:DesignWidth="800"
+        d:DesignHeight="450"
         x:Class="AvaloniaDesktop.Views.MainWindow"
-		xmlns:rxui="http://reactiveui.net"
-		xmlns:helpers="clr-namespace:AvaloniaDesktop.Helpers;assembly=AvaloniaDesktop"
+	xmlns:rxui="http://reactiveui.net"
+	xmlns:helpers="clr-namespace:AvaloniaDesktop.Helpers;assembly=AvaloniaDesktop"
         Icon="/Assets/avalonia-logo.ico"
-		WindowStartupLocation="CenterScreen"
-		MinWidth="800"
-		MinHeight="600"
-		Background="#F5F5F5"
+        WindowStartupLocation="CenterScreen"
+        MinWidth="800"
+        MinHeight="600"
+        Background="#F5F5F5"
         Title="AvaloniaDesktop">
-
 	<Design.DataContext>
-		<vm:MainWindowViewModel/>
+		<vm:MainWindowViewModel />
 	</Design.DataContext>
-	
-	<rxui:RoutedViewHost Router="{Binding Path=Router}" PageTransition="{x:Static helpers:Transitions.Fade}">
+	<rxui:RoutedViewHost Router="{Binding Path=Router}"
+                         PageTransition="{x:Static helpers:Transitions.Fade}">
 		<rxui:RoutedViewHost.DefaultContent>
-			<StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-				<!--
-				<TextBlock Classes="h1" Text="Personnel Application"/>-->
-				<TextBlock Classes="h3"  Text="Идет загрузка..." HorizontalAlignment="Center" TextAlignment="Center"/>
-				<ProgressBar IsIndeterminate="True"/>
+			<StackPanel VerticalAlignment="Center"
+                        HorizontalAlignment="Center">
+				<!-- <TextBlock Classes="h1" Text="Personnel Application"/> -->
+				<TextBlock Classes="h3"
+                           Text="Идет загрузка..."
+                           HorizontalAlignment="Center"
+                           TextAlignment="Center" />
+				<ProgressBar IsIndeterminate="True" />
 			</StackPanel>
 		</rxui:RoutedViewHost.DefaultContent>
 	</rxui:RoutedViewHost>
-
 </Window>

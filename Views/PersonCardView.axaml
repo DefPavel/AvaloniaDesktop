@@ -1,218 +1,305 @@
-﻿<UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:model="using:AvaloniaDesktop.Models"
-             xmlns:asyncImageLoader="clr-namespace:AsyncImageLoader;assembly=AsyncImageLoader.Avalonia"
-             xmlns:vm="using:AvaloniaDesktop.ViewModels"
-             xmlns:i="using:Avalonia.Xaml.Interactivity"
-             xmlns:ia="using:Avalonia.Xaml.Interactions.Core"
-             xmlns:sys="clr-namespace:System;assembly=System.Runtime"
-             xmlns:helpers="clr-namespace:AvaloniaDesktop.Helpers"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+﻿<UserControl
+	xmlns="https://github.com/avaloniaui"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:asyncImageLoader="clr-namespace:AsyncImageLoader;assembly=AsyncImageLoader.Avalonia"
+	xmlns:vm="using:AvaloniaDesktop.ViewModels"
+	xmlns:i="using:Avalonia.Xaml.Interactivity"
+	xmlns:ia="using:Avalonia.Xaml.Interactions.Core"
+	xmlns:helpers="clr-namespace:AvaloniaDesktop.Helpers"
+             mc:Ignorable="d"
+             d:DesignWidth="800"
+             d:DesignHeight="450"
              x:Class="AvaloniaDesktop.Views.PersonCardView">
-    
-    <Design.DataContext>
-        <vm:PersonCardViewModel/>
-    </Design.DataContext>
-
-    <Grid 
-        ColumnDefinitions="300, *"
-        RowDefinitions="*, 25">
-        
-        <!--#region SideBar -->
-        <Grid
-            Grid.Row="0"
-            Grid.Column="0" RowDefinitions="60,45,35,*">
-            <StackPanel 
-                Margin="5 5 5 0"
-                Grid.Row="0">
-                <Button
-                    Command="{Binding GoBack}"
-                    Content="Вернуться на главное"/>
-                <Button
-                    Command="{Binding GetAllPersons}"
-                    Content="Отобразить всех"/>
-            </StackPanel>
-            
-            <StackPanel 
-                Margin="5 10 5 0"
-                Orientation="Horizontal"
-                Grid.Row="1">
-                
-                <RadioButton Name="IsAllRadio" Margin="5 0 5 0" IsChecked="True" Content="Обе категории">
-                    <i:Interaction.Behaviors>
-                        <ia:EventTriggerBehavior EventName="Checked" SourceObject="{Binding #IsAllRadio}">
-                            <ia:InvokeCommandAction Command="{Binding GetPersonsToNppAll}"/>
-                        </ia:EventTriggerBehavior>
-                    </i:Interaction.Behaviors>
-                </RadioButton>
-                
-                <RadioButton Name="IsPedRadio" Margin="5 0 5 0"  Content="НПП">
-                    <i:Interaction.Behaviors>
-                        <ia:EventTriggerBehavior EventName="Checked" SourceObject="{Binding #IsPedRadio}">
-                            <ia:InvokeCommandAction Command="{Binding GetPersonsToNpp}"/>
-                        </ia:EventTriggerBehavior>
-                    </i:Interaction.Behaviors>
-                </RadioButton>
-                
-                <RadioButton Name="IsNoPedRadio" Margin="5 0 5 0" Content="РСП И ОП">
-                    <i:Interaction.Behaviors>
-                        <ia:EventTriggerBehavior EventName="Checked" SourceObject="{Binding #IsNoPedRadio}">
-                            <ia:InvokeCommandAction Command="{Binding GetPersonsToNotNpp}"/>
-                        </ia:EventTriggerBehavior>
-                    </i:Interaction.Behaviors>
-                </RadioButton>
-            </StackPanel>
-            
-            <StackPanel 
-                Margin="5 0 5 0"
-                Grid.Row="2">
-                <Separator/>
-                <TextBox
-                    Watermark="Введите Фамилию"
-                    Text="{Binding 
-                    FilterName,
-                     Mode=TwoWay
-                    }"/>
-            </StackPanel>
-            <DataGrid 
-                Margin="10 0 10 0"
-                Name="SortedGrid"
-                AutoGenerateColumns="False"
-                Items="{Binding Path=PersonsList}"
-                SelectionMode="Single"
-                SelectedItem="{Binding Path=SelectedPerson}"
-                Grid.Row="3">
-                <i:Interaction.Behaviors>
-                    <ia:EventTriggerBehavior EventName="Tapped" SourceObject="{Binding #SortedGrid}">
-                        <ia:InvokeCommandAction Command="{Binding GetInforationByPerson}"/>
-                    </ia:EventTriggerBehavior>
-                </i:Interaction.Behaviors>
-                <DataGrid.Columns>
-                    <DataGridTextColumn 
-                        Header="Ф.И.О."
-                        Width="*"
-                        Binding="{Binding Path=FullName}"
-                        />
-                </DataGrid.Columns>
-                
-            </DataGrid>
-
-        </Grid>
-        <!--#endregion -->
-        <TextBlock 
-            Margin="10 3 0 0"
-            Text="{Binding PersonsList.Count , StringFormat='Кол.записей: {0}'}"
-            Grid.Row="1"
-            Grid.Column="0"/>
-        
-        <!--#region Content -->
-        <Grid
-            RowDefinitions="35,35, *"
-            Grid.Row="0"
-            Grid.Column="1">
-            
-   
-                <TextBlock
-                    Grid.Row="0"
-                    Classes="h3"
-                    Text="{Binding TitleDepartment}"/>
-                <Separator 
-                    Grid.Row="0" Background="#BDBDBD" VerticalAlignment="Bottom" Height="2"/>
-                
-                <TextBlock
-                    Grid.Row="1"
-                    Classes="h3"
-                    Text="{Binding InforamationPerson.FullName}"/>
-                
-                <Separator 
-                    Grid.Row="1" Background="#BDBDBD" VerticalAlignment="Bottom" Height="2"/>
-    
-            
-            <TabControl 
-                Background="White"
-                BorderThickness="1"
-                BorderBrush="#BDBDBD"
-                Margin="5"
-                Grid.Row="2">
-                <TabItem 
-                    FontSize="13"
-                    Header="Личная карта">
-                    <TabItem.Resources>
-                        <helpers:CustomDateConverter 
-                            x:Key="ConvertDate" />
-                    </TabItem.Resources>
-                    <ScrollViewer>
-                        <Grid RowDefinitions="300,*,*,*">
-                            <Grid
-                                Margin="5"
-                                Grid.Row="0"
-                                ColumnDefinitions="120,*,*">
-                                    <StackPanel 
-                                        Grid.Column="0">
-                                        <Border
-                                            Padding="5"
+	<Design.DataContext>
+		<vm:PersonCardViewModel />
+	</Design.DataContext>
+	<Grid ColumnDefinitions="300, *"
+          RowDefinitions="*, 25">
+		<!-- #region SideBar -->
+		<Grid Grid.Row="0"
+              Grid.Column="0"
+              RowDefinitions="60,45,35,*">
+			<StackPanel Margin="5 5 5 0"
+                        Grid.Row="0">
+				<Button Command="{Binding GoBack}"
+                        Content="Вернуться на главное" />
+				<Button Command="{Binding GetAllPersons}"
+                        Content="Отобразить всех" />
+			</StackPanel>
+			<StackPanel Margin="5 10 5 0"
+                        Orientation="Horizontal"
+                        Grid.Row="1">
+				<RadioButton Name="IsAllRadio"
+                             Margin="5 0 5 0"
+                             IsChecked="True"
+                             Content="Обе категории">
+					<i:Interaction.Behaviors>
+						<ia:EventTriggerBehavior EventName="Checked"
+                                                 SourceObject="{Binding #IsAllRadio}">
+							<ia:InvokeCommandAction Command="{Binding GetPersonsToNppAll}" />
+						</ia:EventTriggerBehavior>
+					</i:Interaction.Behaviors>
+				</RadioButton>
+				<RadioButton Name="IsPedRadio"
+                             Margin="5 0 5 0"
+                             Content="НПП">
+					<i:Interaction.Behaviors>
+						<ia:EventTriggerBehavior EventName="Checked"
+                                                 SourceObject="{Binding #IsPedRadio}">
+							<ia:InvokeCommandAction Command="{Binding GetPersonsToNpp}" />
+						</ia:EventTriggerBehavior>
+					</i:Interaction.Behaviors>
+				</RadioButton>
+				<RadioButton Name="IsNoPedRadio"
+                             Margin="5 0 5 0"
+                             Content="РСП И ОП">
+					<i:Interaction.Behaviors>
+						<ia:EventTriggerBehavior EventName="Checked"
+                                                 SourceObject="{Binding #IsNoPedRadio}">
+							<ia:InvokeCommandAction Command="{Binding GetPersonsToNotNpp}" />
+						</ia:EventTriggerBehavior>
+					</i:Interaction.Behaviors>
+				</RadioButton>
+			</StackPanel>
+			<StackPanel Margin="5 0 5 0"
+                        Grid.Row="2">
+				<Separator />
+				<TextBox Watermark="Введите Фамилию"
+                         Text="{Binding 
+&#xA;                    FilterName,
+&#xA;                     Mode=TwoWay
+&#xA;                    }" />
+			</StackPanel>
+			<DataGrid Margin="10 0 10 0"
+                      Name="SortedGrid"
+                      AutoGenerateColumns="False"
+                      Items="{Binding Path=PersonsList}"
+                      SelectionMode="Single"
+                      SelectedItem="{Binding Path=SelectedPerson}"
+                      Grid.Row="3">
+				<i:Interaction.Behaviors>
+					<ia:EventTriggerBehavior EventName="Tapped"
+                                             SourceObject="{Binding #SortedGrid}">
+						<ia:InvokeCommandAction Command="{Binding GetInforationByPerson}" />
+					</ia:EventTriggerBehavior>
+				</i:Interaction.Behaviors>
+				<DataGrid.Columns>
+					<DataGridTextColumn Header="Ф.И.О."
+                                        Width="*"
+                                        Binding="{Binding Path=FullName}" />
+				</DataGrid.Columns>
+			</DataGrid>
+		</Grid>
+		<!-- #endregion -->
+		<TextBlock Margin="10 3 0 0"
+                   Text="{Binding PersonsList.Count , StringFormat='Кол.записей: {0}'}"
+                   Grid.Row="1"
+                   Grid.Column="0" />
+		<!-- #region Content -->
+		<Grid RowDefinitions="35,35, *"
+              Grid.Row="0"
+              Grid.Column="1">
+			<TextBlock Grid.Row="0"
+                       Classes="h3"
+                       Text="{Binding TitleDepartment}" />
+			<Separator Grid.Row="0"
+                       Background="#BDBDBD"
+                       VerticalAlignment="Bottom"
+                       Height="2" />
+			<TextBlock Grid.Row="1"
+                       Classes="h3"
+                       Text="{Binding InforamationPerson.FullName}" />
+			<Separator Grid.Row="1"
+                       Background="#BDBDBD"
+                       VerticalAlignment="Bottom"
+                       Height="2" />
+			<TabControl Background="White"
+                        BorderThickness="1"
+                        BorderBrush="#BDBDBD"
+                        Margin="5"
+                        Grid.Row="2">
+				<TabItem FontSize="13"
+                         Header="Личная карта">
+					<TabItem.Resources>
+						<helpers:CustomDateConverter x:Key="ConvertDate" />
+					</TabItem.Resources>
+					<ScrollViewer>
+						<Grid RowDefinitions="300,*,*,*">
+							<Grid Margin="5"
+                                  Grid.Row="0"
+                                  ColumnDefinitions="120,*,*">
+								<StackPanel Grid.Column="0">
+									<Border Padding="5"
                                             MinHeight="140"
                                             BorderBrush="#BDBDBD"
-                                            BorderThickness="1"
-                                            >
-                                            <Image 
-                                                Stretch="Fill"
-                                                asyncImageLoader:ImageLoader.Source="{Binding InforamationPerson.Photo}"
-                    
-                                                HorizontalAlignment="Center"
-                                                VerticalAlignment="Center"
-                                                StretchDirection="DownOnly" />     
-                                        </Border>
-                                       
-                                        <TextBlock 
-                                            VerticalAlignment="Center"
-                                            HorizontalAlignment="Center"
-                                            Text="Дата приёма"/>
-
-                                        <!--<TextBox 
-                                            Text="{Binding InforamationPerson.DateWorking, StringFormat={}{0:yyyy}}"
-                                            />-->
-                                        
-                                        <!--<TextBox 
-                                            HorizontalContentAlignment="Stretch"
-                                            Text="{Binding "/>-->
-                                        <TextBox Text="{Binding InforamationPerson.DateWorking,
-                                        Converter={StaticResource ConvertDate}}" />
-                                        <Button 
-                                            VerticalAlignment="Center"
+                                            BorderThickness="1">
+										<Image Stretch="Uniform"
+                                               asyncImageLoader:ImageLoader.Source="{Binding InforamationPerson.Photo}"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"
+                                               StretchDirection="DownOnly" />
+									</Border>
+									<TextBlock VerticalAlignment="Center"
+                                               HorizontalAlignment="Center"
+                                               Text="Дата приёма" />
+									<TextBox Text="{Binding InforamationPerson.DateWorking,
+&#xA;                                        Converter={StaticResource ConvertDate}}" />
+									<Button VerticalAlignment="Center"
                                             HorizontalAlignment="Center"
                                             Background="#B71C1C"
                                             Foreground="White"
                                             Width="110"
-                                            Content="Сохранить"/> 
-                                    </StackPanel>
-                                </Grid>
-                            
-                        </Grid>     
-                    </ScrollViewer>
-                   
-                </TabItem>
-                <TabItem Header="Работа">
+                                            Content="Сохранить" />
+								</StackPanel>
+								<Grid Margin="3"
+                                      Grid.Column="1"
+                                      RowDefinitions="23,35,23,35,23,35,23,35,23,35,*">
+									<Label Margin="4 0 4 0"
+                                           Background="LightGray"
+                                           Grid.Row="0"
+                                           Content="Фамилия:" />
+									<Grid Grid.Row="1"
+                                          ColumnDefinitions="*,30">
+										<TextBox Grid.Column="0"
+                                                 IsEnabled="True"
+                                                 Text="{Binding InforamationPerson.FirstName}" />
+										<Button Command="{Binding OpenChangeSurname}"
+                                                Grid.Column="1">
+											<Canvas Height="13"
+                                                    Width="13">
+												<Path Stretch="Uniform"
+                                                      Fill="#444444"
+                                                      Data="M21.7,13.35L20.7,14.35L18.65,12.3L19.65,11.3C19.86,11.09 20.21,11.09 20.42,11.3L21.7,12.58C21.91,12.79 21.91,13.14 21.7,13.35M12,18.94L18.06,12.88L20.11,14.93L14.06,21H12V18.94M12,14C7.58,14 4,15.79 4,18V20H10V18.11L14,14.11C13.34,14.03 12.67,14 12,14M12,4A4,4 0 0,0 8,8A4,4 0 0,0 12,12A4,4 0 0,0 16,8A4,4 0 0,0 12,4Z"
+                                                      Width="13"
+                                                      Height="13" />
+											</Canvas>
+										</Button>
+									</Grid>
+									<Label Margin="4 0 4 0"
+                                           Background="LightGray"
+                                           Grid.Row="2"
+                                           Content="Имя:" />
+									<TextBox Grid.Row="3"
+                                             Text="{Binding InforamationPerson.MidlleName}" />
+									<Label Margin="4 0 4 0"
+                                           Grid.Row="4"
+                                           Background="LightGray"
+                                           Content="Отчество:" />
+									<TextBox Grid.Row="5"
+                                             Text="{Binding InforamationPerson.LastName}" />
+									<Label Margin="4 0 4 0"
+                                           Background="LightGray"
+                                           Grid.Row="6"
+                                           Content="Пол:" />
+									<StackPanel Orientation="Horizontal"
+                                                Grid.Row="7">
+										<RadioButton IsChecked="{Binding RadioIsMale}"
+                                                     Padding="2"
+                                                     Content="Мужчина" />
+										<RadioButton IsChecked="{Binding RadioIsFemale}"
+                                                     Padding="2"
+                                                     Content="Женщина" />
+									</StackPanel>
+									<Label Margin="4 0 4 0"
+                                           Background="LightGray"
+                                           Grid.Row="8"
+                                           Content="Номер карты" />
+									<TextBox Grid.Row="9"
+                                             Text="{Binding InforamationPerson.CodeCard}" />
+								</Grid>
+								<Grid Margin="3"
+                                      Grid.Column="2"
+                                      RowDefinitions="23,35,23,35,23,35,23,35,23,35,*">
+									<Label Margin="4 0 4 0"
+                                           Background="LightGray"
+                                           Grid.Row="0"
+                                           Content="Номер телефона Лугаком:" />
+									<TextBox Grid.Row="1"
+                                             Text="{Binding InforamationPerson.PhoneLugakom}" />
+									<Label Margin="4 0 4 0"
+                                           Background="LightGray"
+                                           Grid.Row="2"
+                                           Content="Номер телефона MTC:" />
+									<TextBox Grid.Row="3"
+                                             Text="{Binding InforamationPerson.PhoneUkraine}" />
+									<Label Margin="4 0 4 0"
+                                           Background="LightGray"
+                                           Grid.Row="4"
+                                           Content="Дата рождения" />
+									<TextBox Grid.Row="5"
+                                             Text="{Binding InforamationPerson.Birthday,
+&#xA;                                        Converter={StaticResource ConvertDate}}" />
+									<Label Margin="4 0 4 0"
+                                           Background="LightGray"
+                                           Grid.Row="6"
+                                           Content="Текущий возраст" />
+									<Label Grid.Row="7"
+                                           Foreground="#B71C1C"
+                                           Margin="4 0 4 0"
+                                           Content="{Binding FullAge}"
+                                           FontWeight="Bold" />
+									<!-- <Run Text="Лет:"/><Run Text="{Binding InforamationPerson.FullAge.Years}"/><Run Text=";"/><Run Text="Месяцев:"/><Run Text="{Binding InforamationPerson.FullAge.Months}"/><Run Text=";"/><Run Text="Дней:"/><Run Text="{Binding InforamationPerson.FullAge.Days}"/><Run Text=";"/> -->
+									<Label Classes.Visible="{Binding InforamationPerson.IsPluralismOter}"
+                                           Classes.NotVisible="{Binding !InforamationPerson.IsPluralismOter}"
+                                           Margin="4 0 4 0"
+                                           Background="LightGray"
+                                           Grid.Row="8"
+                                           Content="Основное место работы (Внеш. совместителя)">
+										<Label.Styles>
+											<Style Selector="Label.Visible">
+												<Style.Setters>
+													<Setter Property="IsVisible"
+                                                            Value="True" />
+												</Style.Setters>
+											</Style>
+											<Style Selector="Label.NotVisible">
+												<Style.Setters>
+													<Setter Property="IsVisible"
+                                                            Value="False" />
+												</Style.Setters>
+											</Style>
+										</Label.Styles>
+									</Label>
+									<TextBox Classes.Visible="{Binding InforamationPerson.IsPluralismOter}"
+                                             Classes.NotVisible="{Binding !InforamationPerson.IsPluralismOter}"
+                                             Text="{Binding InforamationPerson.PositionPluralist}"
+                                             Grid.Row="9">
+										<TextBox.Styles>
+											<Style Selector="TextBox.Visible">
+												<Style.Setters>
+													<Setter Property="IsVisible"
+                                                            Value="True" />
+												</Style.Setters>
+											</Style>
+											<Style Selector="TextBox.NotVisible">
+												<Style.Setters>
+													<Setter Property="IsVisible"
+                                                            Value="False" />
+												</Style.Setters>
+											</Style>
+										</TextBox.Styles>
+									</TextBox>
+								</Grid>
+							</Grid>
+						</Grid>
+					</ScrollViewer>
+				</TabItem>
+				<TabItem Header="Работа">
                     Работа
                 </TabItem>
-                <TabItem Header="Паспорт">
+				<TabItem Header="Паспорт">
                     Паспорт
                 </TabItem>
-                <TabItem Header="Сканы документов">
+				<TabItem Header="Сканы документов">
                     Сканы
                 </TabItem>
-                <TabItem Header="Образование">
+				<TabItem Header="Образование">
                     Образование
                 </TabItem>
-                
-            </TabControl>
-            
-            
-           
-        </Grid>
-        <!--#endregion -->
-        
-    </Grid>
+			</TabControl>
+		</Grid>
+		<!-- #endregion -->
+	</Grid>
 </UserControl>

@@ -1,97 +1,85 @@
-<UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             xmlns:vm="using:AvaloniaDesktop.ViewModels"
+<UserControl
+	xmlns="https://github.com/avaloniaui"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             d:DesignWidth="800"
+             d:DesignHeight="450"
+	xmlns:vm="using:AvaloniaDesktop.ViewModels"
              x:Class="AvaloniaDesktop.Views.LoginView">
-	
 	<Design.DataContext>
-		<vm:LoginViewModel/>
+		<vm:LoginViewModel />
 	</Design.DataContext>
-
-	<Grid 
-		RowDefinitions="*,35">
-		<Border
-		 Grid.Row="0"	
-		 Background="White"
-         BorderThickness="2"
-         CornerRadius="3"
-         Margin="10"
-         MinWidth="200"
-         VerticalAlignment="Center"
-         Padding="30"
-		 MaxWidth="450"
-		 BoxShadow="3 3 10 2 #BDBDBD">
-			<Grid
-				ColumnDefinitions="110,*"
-				RowDefinitions="50,*,3,*,3,*,*,*">
-				<TextBlock
-					Grid.Column="1"
-					Grid.Row="0"
-					Classes="h3"
-					Margin="0 0 50 0"
-					Text="JMU - Personnel"
-					HorizontalAlignment="Center"/>
-				<TextBlock
-					VerticalAlignment="Center"
-					Grid.Column="0"
-					 Grid.Row="1"
-					Text="Введите логин:"/>
-				<TextBox
-					VerticalAlignment="Center"
-					Grid.Column="1"
-					 Grid.Row="1"
-					Text="{Binding Path=Username}"/>
-				<TextBlock
-					VerticalAlignment="Center"
-					Grid.Column="0"
-					Grid.Row="3"
-					Text="Введите пароль:"/>
-				<TextBox
-					VerticalAlignment="Center"
-					Grid.Column="1"
-					Grid.Row="3"
-					PasswordChar="•"
-					Text="{Binding Path=Password}"/>
-				<CheckBox
-					Grid.Column="1"
-					Grid.Row="5"
-					HorizontalAlignment="Right"
-					Content="Запомнить"
-					Margin="5"
-					IsChecked="{Binding Path=IsRememberMe}"/>
-				<Button
-					Width="80"
-					Grid.Column="1"
-					Grid.Row="6"
-					HorizontalAlignment="Right"
-					VerticalAlignment="Center"
-					Content="Ввойти"
-					Background="#086f9e"
-					Foreground="White"
-					HotKey="Return"
-					Command="{Binding Login}"/>
-				<TextBlock
-					Grid.Column="1"
-					Grid.Row="6"
-					HorizontalAlignment="Left"
-					VerticalAlignment="Center"
-					Foreground="Red"
-					TextWrapping="Wrap"
-					Text="{Binding ErrorMessage}"/>
-				<ProgressBar
-					Grid.Column="1"
-					Grid.Row="7"
-					HorizontalAlignment="Left"
-					Name="ProgressBar"
-					IsIndeterminate="True"/>
+	<Grid RowDefinitions="*,35">
+		<Border Grid.Row="0"
+                Background="White"
+                BorderThickness="2"
+                CornerRadius="3"
+                Margin="10"
+                MinWidth="200"
+                VerticalAlignment="Center"
+                Padding="30"
+                MaxWidth="450"
+                BoxShadow="3 3 10 2 #BDBDBD">
+			<Grid ColumnDefinitions="110,*"
+                  RowDefinitions="50,*,3,*,3,*,*,*">
+				<TextBlock Grid.Column="1"
+                           Grid.Row="0"
+                           Classes="h3"
+                           Margin="0 0 50 0"
+                           Text="JMU - Personnel"
+                           HorizontalAlignment="Center" />
+				<TextBlock VerticalAlignment="Center"
+                           Grid.Column="0"
+                           Grid.Row="1"
+                           Text="Введите логин:" />
+				<TextBox VerticalAlignment="Center"
+                         Grid.Column="1"
+                         Grid.Row="1"
+                         Text="{Binding Path=Username}" />
+				<TextBlock VerticalAlignment="Center"
+                           Grid.Column="0"
+                           Grid.Row="3"
+                           Text="Введите пароль:" />
+				<TextBox VerticalAlignment="Center"
+                         Grid.Column="1"
+                         Grid.Row="3"
+                         PasswordChar="•"
+                         Text="{Binding Path=Password}" />
+				<CheckBox Grid.Column="1"
+                          Grid.Row="5"
+                          HorizontalAlignment="Right"
+                          Content="Запомнить"
+                          Margin="5"
+                          IsChecked="{Binding Path=IsRememberMe}" />
+				<Button Width="80"
+                        Grid.Column="1"
+                        Grid.Row="6"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        Content="Ввойти"
+                        Background="#086f9e"
+                        Foreground="White"
+                        HotKey="Return"
+                        Command="{Binding Login}" />
+				<TextBlock Grid.Column="1"
+                           Grid.Row="6"
+                           HorizontalAlignment="Left"
+                           VerticalAlignment="Center"
+                           Foreground="Red"
+                           TextWrapping="Wrap"
+                           Text="{Binding ErrorMessage}" />
+				<ProgressBar Grid.Column="1"
+                             Grid.Row="7"
+                             HorizontalAlignment="Left"
+                             Name="ProgressBar"
+                             IsIndeterminate="True" />
 			</Grid>
 		</Border>
-		<TextBlock
-				Grid.Row="1"
-				HorizontalAlignment="Center"
-				VerticalAlignment="Center"
-				Text="{Binding Version}"/>
+		<TextBlock Grid.Row="1"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   Text="{Binding Version}" />
 	</Grid>
 </UserControl>

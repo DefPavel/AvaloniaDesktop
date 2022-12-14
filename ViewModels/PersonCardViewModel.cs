@@ -5,10 +5,8 @@ using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
-using Avalonia.Media.Imaging;
 using AvaloniaDesktop.Models;
 using AvaloniaDesktop.Services;
-using AvaloniaDesktop.Services.Api;
 using DynamicData;
 using DynamicData.Binding;
 using ReactiveUI;
@@ -35,6 +33,8 @@ public sealed class PersonCardViewModel :  ViewModelBase, IRoutableViewModel
     #endregion
 
     #region Свойства
+    
+    [Reactive] public string? FullAge { get; set; }
     [Reactive] public string? FilterName { get; set; }
     [Reactive] public Persons? SelectedPerson { get; set; }
     [Reactive] public Persons? InforamationPerson { get; set; }
@@ -81,11 +81,21 @@ public sealed class PersonCardViewModel :  ViewModelBase, IRoutableViewModel
     // При переходе на персональную карту
     private async Task ApiGetListPersons(Users users, Departments departments , Persons persons)
     {
-        var personsList = await _cardService!.GetShortNamePersonsByDepartmentId(users, departments.Id);
+        var personsListTask = _cardService!.GetShortNamePersonsByDepartmentId(users, departments.Id);
+        var informationTask = _cardService!.GetInformationByPerson(users, persons!);
+        await Task.WhenAll(personsListTask, informationTask);
+        
         _personsSourceList.Clear();
-        _personsSourceList.AddRange(personsList);
+        _personsSourceList.AddRange(personsListTask.Result);
         TitleDepartment = departments.Name;
+        // Выбрать нужный элемент
         SelectedPerson = PersonsList.FirstOrDefault(x => x.Id == persons.Id)!;
+        // Информация о персоне
+        InforamationPerson = informationTask.Result;
+        
+        // Полный возраст сотрудника 
+        FullAge =
+            $"Лет:{informationTask.Result.FullAge?.Years}; Месяцев:{informationTask.Result.FullAge?.Months}; Дней:{informationTask.Result.FullAge?.Days};";
     }
     
     // Отобразить всех сотрудников в sidebar
@@ -139,7 +149,7 @@ public sealed class PersonCardViewModel :  ViewModelBase, IRoutableViewModel
             .Subscribe();
             
         
-       this.WhenActivated((CompositeDisposable disposables) =>
+       this.WhenActivated(disposables =>
        {
            GC.Collect();
            
