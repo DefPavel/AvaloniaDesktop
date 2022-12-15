@@ -160,8 +160,7 @@
 											<DataTemplate>
 												<AutoCompleteBox Foreground="Black"
                                                                  MaxDropDownHeight="80"
-                                                                 Items="{Binding DataContext.TypePosition, 
-&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                                                 Items="{Binding DataContext.TypePosition, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
                                                                  Text="{Binding $parent[DataGridRow].DataContext.Name, Mode=TwoWay}"
                                                                  FilterMode="StartsWithOrdinal"
                                                                  BorderThickness="0" />

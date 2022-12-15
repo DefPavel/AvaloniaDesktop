@@ -67,10 +67,7 @@
                         Grid.Row="2">
 				<Separator />
 				<TextBox Watermark="Введите Фамилию"
-                         Text="{Binding 
-&#xA;                    FilterName,
-&#xA;                     Mode=TwoWay
-&#xA;                    }" />
+                         Text="{Binding FilterName, Mode=TwoWay}" />
 			</StackPanel>
 			<DataGrid Margin="10 0 10 0"
                       Name="SortedGrid"
@@ -118,7 +115,7 @@
 			<TabControl Background="White"
                         BorderThickness="1"
                         BorderBrush="#BDBDBD"
-                        Margin="5"
+                        Margin="5 5 5 0"
                         Grid.Row="2">
 				<TabItem FontSize="13"
                          Header="Личная карта">
@@ -127,9 +124,11 @@
 					</TabItem.Resources>
 					<ScrollViewer>
 						<Grid RowDefinitions="300,*,*,*">
-							<Grid Margin="5"
-                                  Grid.Row="0"
-                                  ColumnDefinitions="120,*,*">
+							<Border
+								Margin="5"
+								Grid.Row="0">
+								<Grid 
+								ColumnDefinitions="120,*,*">
 								<StackPanel Grid.Column="0">
 									<Border Padding="5"
                                             MinHeight="140"
@@ -144,8 +143,7 @@
 									<TextBlock VerticalAlignment="Center"
                                                HorizontalAlignment="Center"
                                                Text="Дата приёма" />
-									<TextBox Text="{Binding InforamationPerson.DateWorking,
-&#xA;                                        Converter={StaticResource ConvertDate}}" />
+									<TextBox Text="{Binding InforamationPerson.DateWorking, Converter={StaticResource ConvertDate}}" />
 									<Button VerticalAlignment="Center"
                                             HorizontalAlignment="Center"
                                             Background="#B71C1C"
@@ -170,8 +168,8 @@
 											<Canvas Height="13"
                                                     Width="13">
 												<Path Stretch="Uniform"
-                                                      Fill="#444444"
-                                                      Data="M21.7,13.35L20.7,14.35L18.65,12.3L19.65,11.3C19.86,11.09 20.21,11.09 20.42,11.3L21.7,12.58C21.91,12.79 21.91,13.14 21.7,13.35M12,18.94L18.06,12.88L20.11,14.93L14.06,21H12V18.94M12,14C7.58,14 4,15.79 4,18V20H10V18.11L14,14.11C13.34,14.03 12.67,14 12,14M12,4A4,4 0 0,0 8,8A4,4 0 0,0 12,12A4,4 0 0,0 16,8A4,4 0 0,0 12,4Z"
+												      Fill="Black"
+												      Data="M21.7,13.35L20.7,14.35L18.65,12.3L19.65,11.3C19.86,11.09 20.21,11.09 20.42,11.3L21.7,12.58C21.91,12.79 21.91,13.14 21.7,13.35M12,18.94L18.06,12.88L20.11,14.93L14.06,21H12V18.94M12,14C7.58,14 4,15.79 4,18V20H10V18.11L14,14.11C13.34,14.03 12.67,14 12,14M12,4A4,4 0 0,0 8,8A4,4 0 0,0 12,12A4,4 0 0,0 16,8A4,4 0 0,0 12,4Z"
                                                       Width="13"
                                                       Height="13" />
 											</Canvas>
@@ -229,8 +227,7 @@
                                            Grid.Row="4"
                                            Content="Дата рождения" />
 									<TextBox Grid.Row="5"
-                                             Text="{Binding InforamationPerson.Birthday,
-&#xA;                                        Converter={StaticResource ConvertDate}}" />
+                                             Text="{Binding InforamationPerson.Birthday, Converter={StaticResource ConvertDate}}" />
 									<Label Margin="4 0 4 0"
                                            Background="LightGray"
                                            Grid.Row="6"
@@ -240,13 +237,12 @@
                                            Margin="4 0 4 0"
                                            Content="{Binding FullAge}"
                                            FontWeight="Bold" />
-									<!-- <Run Text="Лет:"/><Run Text="{Binding InforamationPerson.FullAge.Years}"/><Run Text=";"/><Run Text="Месяцев:"/><Run Text="{Binding InforamationPerson.FullAge.Months}"/><Run Text=";"/><Run Text="Дней:"/><Run Text="{Binding InforamationPerson.FullAge.Days}"/><Run Text=";"/> -->
 									<Label Classes.Visible="{Binding InforamationPerson.IsPluralismOter}"
-                                           Classes.NotVisible="{Binding !InforamationPerson.IsPluralismOter}"
-                                           Margin="4 0 4 0"
-                                           Background="LightGray"
-                                           Grid.Row="8"
-                                           Content="Основное место работы (Внеш. совместителя)">
+									       Classes.NotVisible="{Binding !InforamationPerson.IsPluralismOter}"
+									       Margin="4 0 4 0"
+									       Background="LightGray"
+									       Grid.Row="8"
+									       Content="Основное место работы (Внеш. совместителя)">
 										<Label.Styles>
 											<Style Selector="Label.Visible">
 												<Style.Setters>
@@ -282,8 +278,236 @@
 										</TextBox.Styles>
 									</TextBox>
 								</Grid>
-							</Grid>
+							</Grid>	
+							</Border>
+							<Border 
+								Margin="3"
+								Grid.Row="1">
+								<Grid 
+									ColumnDefinitions="*,*">
+									<StackPanel 
+										Margin="5"
+										Grid.Column="0">
+                                        <CheckBox 
+	                                        Margin="5"
+	                                        Name="IsStudent"
+                                            IsEnabled="{Binding IsAdministrator}"
+                                            Content="Студент"
+                                                  IsChecked="{Binding SelectedPerson.IsStudent ,TargetNullValue={x:Null}}">
+	                                        <i:Interaction.Behaviors>
+		                                        <ia:EventTriggerBehavior EventName="Click"
+		                                                                 SourceObject="{Binding #IsStudent}">
+			                                        <ia:InvokeCommandAction Command="{Binding UpdateStates}" />
+		                                        </ia:EventTriggerBehavior>
+	                                        </i:Interaction.Behaviors>
+                                        </CheckBox>
+                                        <CheckBox 
+	                                        Margin="5"
+	                                        Name="IsGraduate"
+                                            IsEnabled="{Binding IsAdministrator}"
+                                            Content="Аспирант" 
+                                                  IsChecked="{Binding SelectedPerson.IsGraduate ,TargetNullValue={x:Null}}">
+	                                        <i:Interaction.Behaviors>
+		                                        <ia:EventTriggerBehavior EventName="Click"
+		                                                                 SourceObject="{Binding #IsGraduate}">
+			                                        <ia:InvokeCommandAction Command="{Binding UpdateStates}" />
+		                                        </ia:EventTriggerBehavior>
+	                                        </i:Interaction.Behaviors>
+                                        </CheckBox>
+                                        <CheckBox
+	                                        Margin="5"
+	                                        Name="IsPluralismOter"
+                                            IsEnabled="{Binding IsAdministrator}"
+                                            Content="Внешний совместитель" 
+                                                  IsChecked="{Binding SelectedPerson.IsPluralismOter ,TargetNullValue={x:Null}}">
+	                                        <i:Interaction.Behaviors>
+		                                        <ia:EventTriggerBehavior EventName="Click"
+		                                                                 SourceObject="{Binding #IsPluralismOter}">
+			                                        <ia:InvokeCommandAction Command="{Binding UpdateStates}" />
+		                                        </ia:EventTriggerBehavior>
+	                                        </i:Interaction.Behaviors>
+                                        </CheckBox>
+                                        <CheckBox
+	                                        Margin="5"
+	                                        Name="IssingleMother"
+                                            IsEnabled="{Binding IsAdministrator}"
+                                            Content="Мать одиночка" 
+                                                  IsChecked="{Binding SelectedPerson.IssingleMother ,TargetNullValue={x:Null}}">
+	                                        <i:Interaction.Behaviors>
+		                                        <ia:EventTriggerBehavior EventName="Click"
+		                                                                 SourceObject="{Binding #IssingleMother}">
+			                                        <ia:InvokeCommandAction Command="{Binding UpdateStates}" />
+		                                        </ia:EventTriggerBehavior>
+	                                        </i:Interaction.Behaviors>
+                                        </CheckBox>
+                                        <CheckBox 
+	                                        Margin="5"
+	                                        Name="IsTwoChildMother"
+                                            IsEnabled="{Binding IsAdministrator}"
+                                            Content="Мать двоих детей" 
+                                                  IsChecked="{Binding SelectedPerson.IsTwoChildMother ,TargetNullValue={x:Null}}">
+	                                        <i:Interaction.Behaviors>
+		                                        <ia:EventTriggerBehavior EventName="Click"
+		                                                                 SourceObject="{Binding #IsTwoChildMother}">
+			                                        <ia:InvokeCommandAction Command="{Binding UpdateStates}" />
+		                                        </ia:EventTriggerBehavior>
+	                                        </i:Interaction.Behaviors>
+                                        </CheckBox>
+                                        <CheckBox 
+	                                        Margin="5"
+	                                        Name="IsMobilized"
+                                            IsEnabled="{Binding IsAdministrator}"
+                                            Content="Мобилизован"
+                                            IsChecked="{Binding SelectedPerson.IsMobilized ,TargetNullValue={x:Null}}">
+	                                        <i:Interaction.Behaviors>
+		                                        <ia:EventTriggerBehavior EventName="Click"
+		                                                                 SourceObject="{Binding #IsMobilized}">
+			                                        <ia:InvokeCommandAction Command="{Binding UpdateStates}" />
+		                                        </ia:EventTriggerBehavior>
+	                                        </i:Interaction.Behaviors>
+                                        </CheckBox>
+                                    </StackPanel>
+									<StackPanel
+										Margin="5"
+										Grid.Column="1">
+                                       
+                                        <CheckBox 
+	                                        Margin="5"
+	                                        Name="IsDoctor"
+                                            IsEnabled="{Binding IsAdministrator}"
+                                            Content="Докторант" 
+                                                  IsChecked="{Binding SelectedPerson.IsDoctor ,TargetNullValue={x:Null}}">
+	                                        <i:Interaction.Behaviors>
+		                                        <ia:EventTriggerBehavior EventName="Click"
+		                                                                 SourceObject="{Binding #IsDoctor}">
+			                                        <ia:InvokeCommandAction Command="{Binding UpdateStates}" />
+		                                        </ia:EventTriggerBehavior>
+	                                        </i:Interaction.Behaviors>
+                                        </CheckBox>
+                                        <CheckBox 
+	                                        Margin="5"
+	                                        Name="IsRussion"
+                                            IsEnabled="{Binding IsAdministrator}"
+                                            Content="Паспорт РФ" 
+                                                  IsChecked="{Binding SelectedPerson.IsRussion,TargetNullValue={x:Null}}">
+	                                        <i:Interaction.Behaviors>
+		                                        <ia:EventTriggerBehavior EventName="Click"
+		                                                                 SourceObject="{Binding #IsRussion}">
+			                                        <ia:InvokeCommandAction Command="{Binding UpdateStates}" />
+		                                        </ia:EventTriggerBehavior>
+	                                        </i:Interaction.Behaviors>
+                                        </CheckBox>
+                                        <CheckBox 
+	                                        Margin="5"
+	                                        Name="IsSnils"
+                                            IsEnabled="{Binding IsAdministrator}"
+                                            Content="СНИЛС" 
+                                                  IsChecked="{Binding SelectedPerson.IsSnils ,TargetNullValue={x:Null}}">
+	                                        <i:Interaction.Behaviors>
+		                                        <ia:EventTriggerBehavior EventName="Click"
+		                                                                 SourceObject="{Binding #IsSnils}">
+			                                        <ia:InvokeCommandAction Command="{Binding UpdateStates}" />
+		                                        </ia:EventTriggerBehavior>
+	                                        </i:Interaction.Behaviors>
+                                        </CheckBox>
+                                        <CheckBox 
+	                                        Margin="5"
+	                                        Name="IsPreviosConvition"
+                                            IsEnabled="{Binding IsAdministrator}"
+                                            Content="Справка о несудимости" 
+                                                  IsChecked="{Binding SelectedPerson.IsPreviosConvition ,TargetNullValue={x:Null}}">
+	                                        <i:Interaction.Behaviors>
+		                                        <ia:EventTriggerBehavior EventName="Click"
+		                                                                 SourceObject="{Binding #IsPreviosConvition}">
+			                                        <ia:InvokeCommandAction Command="{Binding UpdateStates}" />
+		                                        </ia:EventTriggerBehavior>
+	                                        </i:Interaction.Behaviors>
+                                        </CheckBox>
+                                        <CheckBox
+	                                        Margin="5"
+	                                        Name="IsResponsible"
+                                            IsEnabled="{Binding IsAdministrator}"
+                                            Content="Метериально ответственное лицо" 
+                                                  IsChecked="{Binding SelectedPerson.IsResponsible ,TargetNullValue={x:Null}}">
+	                                        <i:Interaction.Behaviors>
+		                                        <ia:EventTriggerBehavior EventName="Click"
+		                                                                 SourceObject="{Binding #IsResponsible}">
+			                                        <ia:InvokeCommandAction Command="{Binding UpdateStates}" />
+		                                        </ia:EventTriggerBehavior>
+	                                        </i:Interaction.Behaviors>
+                                        </CheckBox>
+                                    </StackPanel>
+								</Grid>
+							</Border>
+							
+							<Border
+								Margin="3"
+								Grid.Row="2">
+								<Grid RowDefinitions="30,*">
+									
+									  <StackPanel
+										  Grid.Row="0"
+                                        Margin="0 0 2 0"
+                                        HorizontalAlignment="Right"
+                                        Orientation="Horizontal">
+										  <Button 
+                                            IsEnabled="{Binding IsAdministrator}"
+                                            Command="{Binding OpenAddPosition}">
+	                                        <Canvas 
+		                                        VerticalAlignment="Center"
+                                                        Height="13"
+                                                        Width="13">
+                                                <Path
+                                                        Stretch="Uniform"
+                                                        Fill="Black"
+                                                        Data="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z"
+                                                        Width="13" 
+                                                        Height="13" />
+                                            </Canvas>
+                                        </Button>
+
+                                        <Button 
+                                            IsEnabled="{Binding IsAdministrator}"
+                                            Command="{Binding OpenChangePosition}">
+	                                        <Canvas 
+		                                        VerticalAlignment="Center"
+                                                        Height="13"
+                                                        Width="13">
+                                                <Path
+                                                        Stretch="Uniform"
+                                                        Fill="Black"
+                                                        Data="M21,9L17,5V8H10V10H17V13M7,11L3,15L7,19V16H14V14H7V11Z"
+                                                        Width="13" 
+                                                        Height="13" />
+                                            </Canvas>
+                                        </Button>
+										  <Button 
+                                            IsEnabled="{Binding IsAdministrator}"
+                                            Command="{Binding OpenDropPosition}">
+	                                        <Canvas 
+		                                        VerticalAlignment="Center"
+                                                        Height="13"
+                                                        Width="13">
+                                                <Path
+                                                        Stretch="Uniform"
+                                                        Fill="Black"
+                                                        Data="M19,13H5V11H19V13Z"
+                                                        Width="13" 
+                                                        Height="13" />
+                                            </Canvas>
+                                        </Button>
+                                    </StackPanel>
+									
+									<DataGrid Grid.Row="1">
+										
+									</DataGrid>
+									
+								</Grid>
+								
+							</Border>
+							
 						</Grid>
+						
 					</ScrollViewer>
 				</TabItem>
 				<TabItem Header="Работа">
