@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.IO;
+using System.Net;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
@@ -46,10 +48,36 @@ public sealed class GlobalSearchViewModel :  ViewModelBase, IRoutableViewModel
         {
             PersonsList = await _searchService!.GetPersonsBySearch(account, SearchQuery!);
         }
-        catch (Exception e)
+        // Ошибка токена
+        catch (WebException ex) when ((int)(ex.Response as HttpWebResponse)!.StatusCode == 419)
         {
-            Console.WriteLine(e);
-            throw;
+            var messageBoxStandardWindow = MessageBox.Avalonia.MessageBoxManager
+                .GetMessageBoxStandardWindow("Предупреждение",
+                    "Вы не проявляли активности в программе более 30 минут!");
+            await messageBoxStandardWindow.Show();
+
+            HostScreen.Router.NavigateAndReset.Execute(new LoginViewModel(HostScreen));
+        }
+        // Ошибка с сервера
+        catch (WebException ex)
+        {
+            if (ex.Status == WebExceptionStatus.ProtocolError)
+            {
+                if (ex.Response is HttpWebResponse response)
+                {
+                    using StreamReader reader = new(response.GetResponseStream());
+                    var messageBoxStandardWindow = MessageBox.Avalonia.MessageBoxManager
+                        .GetMessageBoxStandardWindow("Ошибочка", await reader.ReadToEndAsync());
+                    await messageBoxStandardWindow.Show();
+                }
+            }
+        }
+        // Что-то опасное
+        catch (Exception ex)
+        {
+            var messageBoxStandardWindow = MessageBox.Avalonia.MessageBoxManager
+                .GetMessageBoxStandardWindow("Ошибочка", ex.Message);
+            await messageBoxStandardWindow.Show();
         }
        
     }

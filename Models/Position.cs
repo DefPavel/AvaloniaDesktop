@@ -55,9 +55,9 @@ public sealed class Position : ReactiveObject
 
     [JsonPropertyName("stavka_budget")] [Reactive] public decimal StavkaBudget { get; set; }
 
-    // public decimal StavkaAll { get => StavkaBudget + StavkaNoBudget; set => StavkaAll = value; }
+     public decimal StavkaAll => StavkaBudget + StavkaNoBudget;
 
-    private decimal _countAllBudget;
+     private decimal _countAllBudget;
 
     public decimal CountAllBudget
     {

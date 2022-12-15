@@ -107,6 +107,9 @@ public sealed class Persons : ReactiveObject
 
     #region Bool 
 
+    [JsonPropertyName("is_mobilized")]
+    public bool IsMobilized { get; set; }
+    
     [JsonPropertyName("is_pensioner")]
     public bool IsPensioner { get; set; }
 

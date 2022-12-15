@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
@@ -37,9 +39,10 @@ public sealed class PersonCardViewModel :  ViewModelBase, IRoutableViewModel
     [Reactive] public string? FullAge { get; set; }
     [Reactive] public string? FilterName { get; set; }
     [Reactive] public Persons? SelectedPerson { get; set; }
+    [Reactive] public Position? SelectedPosition { get; set; }
     [Reactive] public Persons? InforamationPerson { get; set; }
     
-    [Reactive] public Departments? SelectedDepartments { get; set; }
+    // [Reactive] public Departments? SelectedDepartments { get; set; }
     [Reactive] public string? TitleDepartment { get; set; }
 
     #endregion
@@ -66,10 +69,47 @@ public sealed class PersonCardViewModel :  ViewModelBase, IRoutableViewModel
     // Информаци Личной карты сотрудника
     private async Task ApiGetInfo(Users users)
     {
-        var information = await _cardService!.GetInformationByPerson(users, SelectedPerson!);
+        try
+        {
+            var information = await _cardService!.GetInformationByPerson(users, SelectedPerson!);
 
-        InforamationPerson = information;
-        TitleDepartment = information.ArrayPosition[0].DepartmentName;
+            InforamationPerson = information;
+            TitleDepartment = information.ArrayPosition[0].DepartmentName;
+            // Полный возраст сотрудника 
+            FullAge = GetFullAge(information);
+        }
+        // Ошибка токена
+        catch (WebException ex) when ((int)(ex.Response as HttpWebResponse)!.StatusCode == 419)
+        {
+            var messageBoxStandardWindow = MessageBox.Avalonia.MessageBoxManager
+                .GetMessageBoxStandardWindow("Предупреждение",
+                    "Вы не проявляли активности в программе более 30 минут!");
+            await messageBoxStandardWindow.Show();
+
+            HostScreen.Router.NavigateAndReset.Execute(new LoginViewModel(HostScreen));
+        }
+        // Ошибка с сервера
+        catch (WebException ex)
+        {
+            if (ex.Status == WebExceptionStatus.ProtocolError)
+            {
+                if (ex.Response is HttpWebResponse response)
+                {
+                    using StreamReader reader = new(response.GetResponseStream());
+                    var messageBoxStandardWindow = MessageBox.Avalonia.MessageBoxManager
+                        .GetMessageBoxStandardWindow("Ошибочка", await reader.ReadToEndAsync());
+                    await messageBoxStandardWindow.Show();
+                }
+            }
+        }
+        // Что-то опасное
+        catch (Exception ex)
+        {
+            var messageBoxStandardWindow = MessageBox.Avalonia.MessageBoxManager
+                .GetMessageBoxStandardWindow("Ошибочка", ex.Message);
+            await messageBoxStandardWindow.Show();
+        }
+       
     }
     // Фильтр
     private static Func<Persons, bool> Filter(string? filterName)
@@ -78,41 +118,109 @@ public sealed class PersonCardViewModel :  ViewModelBase, IRoutableViewModel
         return x => x.FullName.ToUpper().StartsWith(filterName.ToUpper());
     }
 
+    // Интерполяция возраста
+    private static string GetFullAge(Persons informationTask) => 
+        $"Лет:{informationTask.FullAge?.Years}; Месяцев:{informationTask.FullAge?.Months}; Дней:{informationTask.FullAge?.Days};";
+    
+
     // При переходе на персональную карту
     private async Task ApiGetListPersons(Users users, Departments departments , Persons persons)
     {
-        var personsListTask = _cardService!.GetShortNamePersonsByDepartmentId(users, departments.Id);
-        var informationTask = _cardService!.GetInformationByPerson(users, persons!);
-        await Task.WhenAll(personsListTask, informationTask);
+        try
+        {
+            var personsListTask = _cardService!.GetShortNamePersonsByDepartmentId(users, departments.Id);
+            var informationTask = _cardService!.GetInformationByPerson(users, persons!);
+            await Task.WhenAll(personsListTask, informationTask);
         
-        _personsSourceList.Clear();
-        _personsSourceList.AddRange(personsListTask.Result);
-        TitleDepartment = departments.Name;
-        // Выбрать нужный элемент
-        SelectedPerson = PersonsList.FirstOrDefault(x => x.Id == persons.Id)!;
-        // Информация о персоне
-        InforamationPerson = informationTask.Result;
-        
-        // Полный возраст сотрудника 
-        FullAge =
-            $"Лет:{informationTask.Result.FullAge?.Years}; Месяцев:{informationTask.Result.FullAge?.Months}; Дней:{informationTask.Result.FullAge?.Days};";
+            _personsSourceList.Clear();
+            _personsSourceList.AddRange(personsListTask.Result.DistinctBy(x => x.Id));
+            TitleDepartment = departments.Name;
+            // Выбрать нужный элемент
+            SelectedPerson = PersonsList.FirstOrDefault(x => x.Id == persons.Id)!;
+            // Информация о персоне
+            InforamationPerson = informationTask.Result;
+            // Полный возраст сотрудника 
+            FullAge = GetFullAge(informationTask.Result);
+        }
+        // Ошибка токена
+        catch (WebException ex) when ((int)(ex.Response as HttpWebResponse)!.StatusCode == 419)
+        {
+            var messageBoxStandardWindow = MessageBox.Avalonia.MessageBoxManager
+                .GetMessageBoxStandardWindow("Предупреждение",
+                    "Вы не проявляли активности в программе более 30 минут!");
+            await messageBoxStandardWindow.Show();
+
+            HostScreen.Router.NavigateAndReset.Execute(new LoginViewModel(HostScreen));
+        }
+        // Ошибка с сервера
+        catch (WebException ex)
+        {
+            if (ex.Status == WebExceptionStatus.ProtocolError)
+            {
+                if (ex.Response is HttpWebResponse response)
+                {
+                    using StreamReader reader = new(response.GetResponseStream());
+                    var messageBoxStandardWindow = MessageBox.Avalonia.MessageBoxManager
+                        .GetMessageBoxStandardWindow("Ошибочка", await reader.ReadToEndAsync());
+                    await messageBoxStandardWindow.Show();
+                }
+            }
+        }
+        // Что-то опасное
+        catch (Exception ex)
+        {
+            var messageBoxStandardWindow = MessageBox.Avalonia.MessageBoxManager
+                .GetMessageBoxStandardWindow("Ошибочка", ex.Message);
+            await messageBoxStandardWindow.Show();
+        }
     }
     
     // Отобразить всех сотрудников в sidebar
     private async Task ApiGetListAllPersonsAsync(Users users)
     {
-        var personsList = await _cardService!.GetAllPersons(users);
-        _personsSourceList.Clear();
-        _personsSourceList.AddRange(personsList);
+        try
+        {
+            var personsList = await _cardService!.GetAllPersons(users);
+            _personsSourceList.Clear();
+            _personsSourceList.AddRange(personsList.DistinctBy(x => x.Id));
 
-        SelectedPerson = PersonsList.FirstOrDefault()!;
+            SelectedPerson = PersonsList.FirstOrDefault()!;
+        }
+        // Ошибка токена
+        catch (WebException ex) when ((int)(ex.Response as HttpWebResponse)!.StatusCode == 419)
+        {
+            var messageBoxStandardWindow = MessageBox.Avalonia.MessageBoxManager
+                .GetMessageBoxStandardWindow("Предупреждение",
+                    "Вы не проявляли активности в программе более 30 минут!");
+            await messageBoxStandardWindow.Show();
+
+            HostScreen.Router.NavigateAndReset.Execute(new LoginViewModel(HostScreen));
+        }
+        // Ошибка с сервера
+        catch (WebException ex)
+        {
+            if (ex.Status == WebExceptionStatus.ProtocolError)
+            {
+                if (ex.Response is HttpWebResponse response)
+                {
+                    using StreamReader reader = new(response.GetResponseStream());
+                    var messageBoxStandardWindow = MessageBox.Avalonia.MessageBoxManager
+                        .GetMessageBoxStandardWindow("Ошибочка", await reader.ReadToEndAsync());
+                    await messageBoxStandardWindow.Show();
+                }
+            }
+        }
+        // Что-то опасное
+        catch (Exception ex)
+        {
+            var messageBoxStandardWindow = MessageBox.Avalonia.MessageBoxManager
+                .GetMessageBoxStandardWindow("Ошибочка", ex.Message);
+            await messageBoxStandardWindow.Show();
+        }
     }
     
 
     #endregion
-    
-    
-
     public PersonCardViewModel(IScreen hostScreen , Users account , Persons selectedPersons, Departments selectedDepartment) :
         this(hostScreen,
             account,
@@ -146,7 +254,8 @@ public sealed class PersonCardViewModel :  ViewModelBase, IRoutableViewModel
             .Filter(filter)
             .ObserveOn(RxApp.MainThreadScheduler)
             .Bind(out _personsList)
-            .Subscribe();
+            .Throttle(TimeSpan.FromMilliseconds(400))
+            .Subscribe(async _ => await ApiGetInfo(account));
             
         
        this.WhenActivated(disposables =>

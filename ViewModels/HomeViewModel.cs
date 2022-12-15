@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Reactive;
 using AvaloniaDesktop.Models;
 using ReactiveUI;
@@ -73,14 +75,48 @@ public sealed class HomeViewModel : ViewModelBase, IRoutableViewModel
     // Загрузка дерева
     private async Task LoadedTreeAsync()
     {
-        // получить все отделы
-        var taskDepartments = _homeService!.GetTreeDepartments(_account);
-        // получить все должности
-        var taskPositions = _homeService!.GetAllPosition(_account);
-        // wait Promise.All
-        await Task.WhenAll(taskDepartments, taskPositions);
-        TypePosition = taskPositions.Result.Select(variable => variable.Name.Trim()).ToArray();
-        DepartmentsList = new ObservableCollection<Departments>(taskDepartments.Result);
+        try
+        {
+            // получить все отделы
+            var taskDepartments = _homeService!.GetTreeDepartments(_account);
+            // получить все должности
+            var taskPositions = _homeService!.GetAllPosition(_account);
+            // wait Promise.All
+            await Task.WhenAll(taskDepartments, taskPositions);
+            TypePosition = taskPositions.Result.Select(variable => variable.Name.Trim()).ToArray();
+            DepartmentsList = new ObservableCollection<Departments>(taskDepartments.Result);
+        }
+        // Ошибка токена
+        catch (WebException ex) when ((int)(ex.Response as HttpWebResponse)!.StatusCode == 419)
+        {
+            var messageBoxStandardWindow = MessageBox.Avalonia.MessageBoxManager
+                .GetMessageBoxStandardWindow("Предупреждение",
+                    "Вы не проявляли активности в программе более 30 минут!");
+            await messageBoxStandardWindow.Show();
+
+            HostScreen.Router.NavigateAndReset.Execute(new LoginViewModel(HostScreen));
+        }
+        // Ошибка с сервера
+        catch (WebException ex)
+        {
+            if (ex.Status == WebExceptionStatus.ProtocolError)
+            {
+                if (ex.Response is HttpWebResponse response)
+                {
+                    using StreamReader reader = new(response.GetResponseStream());
+                    var messageBoxStandardWindow = MessageBox.Avalonia.MessageBoxManager
+                        .GetMessageBoxStandardWindow("Ошибочка", await reader.ReadToEndAsync());
+                    await messageBoxStandardWindow.Show();
+                }
+            }
+        }
+        // Что-то опасное
+        catch (Exception ex)
+        {
+            var messageBoxStandardWindow = MessageBox.Avalonia.MessageBoxManager
+                .GetMessageBoxStandardWindow("Ошибочка", ex.Message);
+            await messageBoxStandardWindow.Show();
+        }
     }
 
     private async Task GoToPersonCard(Users account , Persons persons, Departments departments)
@@ -89,17 +125,50 @@ public sealed class HomeViewModel : ViewModelBase, IRoutableViewModel
     }
     private async Task GetPersonByTreeItemAsync()
     {
-        var taskPersonsByDepartment = _homeService!.GetPersonsByDepartment(_account, SelectedDepartments);
-        var taskPositionsByDepartment = _homeService!.GetPositionsByDepartment(_account, SelectedDepartments);
-        // wait Promise.All
-        await Task.WhenAll(taskPersonsByDepartment, taskPositionsByDepartment);
-        // получить список сотрудников выбранного отдела
-        _personsSourceList.Clear();
-        _personsSourceList.AddRange(taskPersonsByDepartment.Result);
-        // получить штатные должности выбранного отдела
-        PositionsList = taskPositionsByDepartment.Result;
-        //SelectedPosition = PositionsList.FirstOrDefault()!;
+        try
+        {
+            var taskPersonsByDepartment = _homeService!.GetPersonsByDepartment(_account, SelectedDepartments);
+            var taskPositionsByDepartment = _homeService!.GetPositionsByDepartment(_account, SelectedDepartments);
+            // wait Promise.All
+            await Task.WhenAll(taskPersonsByDepartment, taskPositionsByDepartment);
+            // получить список сотрудников выбранного отдела
+            _personsSourceList.Clear();
+            _personsSourceList.AddRange(taskPersonsByDepartment.Result);
+            // получить штатные должности выбранного отдела
+            PositionsList = taskPositionsByDepartment.Result;
+            //SelectedPosition = PositionsList.FirstOrDefault()!;
+        }
+        // Ошибка токена
+        catch (WebException ex) when ((int)(ex.Response as HttpWebResponse)!.StatusCode == 419)
+        {
+            var messageBoxStandardWindow = MessageBox.Avalonia.MessageBoxManager
+                .GetMessageBoxStandardWindow("Предупреждение",
+                    "Вы не проявляли активности в программе более 30 минут!");
+            await messageBoxStandardWindow.Show();
 
+            HostScreen.Router.NavigateAndReset.Execute(new LoginViewModel(HostScreen));
+        }
+        // Ошибка с сервера
+        catch (WebException ex)
+        {
+            if (ex.Status == WebExceptionStatus.ProtocolError)
+            {
+                if (ex.Response is HttpWebResponse response)
+                {
+                    using StreamReader reader = new(response.GetResponseStream());
+                    var messageBoxStandardWindow = MessageBox.Avalonia.MessageBoxManager
+                        .GetMessageBoxStandardWindow("Ошибочка", await reader.ReadToEndAsync());
+                    await messageBoxStandardWindow.Show();
+                }
+            }
+        }
+        // Что-то опасное
+        catch (Exception ex)
+        {
+            var messageBoxStandardWindow = MessageBox.Avalonia.MessageBoxManager
+                .GetMessageBoxStandardWindow("Ошибочка", ex.Message);
+            await messageBoxStandardWindow.Show();
+        }
         // Считаем сколько НПП
         CountIsPedPerson = _personsList.DistinctBy(x => x.Id).Count(x => x.IsPed);
         // Считаем сколько не НПП
