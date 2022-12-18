@@ -299,6 +299,29 @@
 					<TabItem IsSelected="True"
                              Header="Сотрудники">
 						<Grid RowDefinitions="45, *, 25">
+							<Grid.Styles>
+								<Style Selector="CheckBox">
+									<Style.Setters>
+										<Setter Property="HorizontalAlignment"
+												Value="Center" />
+									</Style.Setters>
+								</Style>
+								<Style Selector="CheckBox.IsTrue">
+									<Style.Setters>
+										<Setter Property="Background"
+												Value="#FF5252" />
+										<Setter Property="BorderBrush"
+												Value="#424242" />
+									</Style.Setters>
+								</Style>
+								<!--
+								<Style Selector="CheckBox.IsFalse">
+									<Style.Setters>
+										<Setter Property="Background"
+												Value="False" />
+									</Style.Setters>
+								</Style>-->
+							</Grid.Styles>
 							<StackPanel Grid.Row="0">
 								<TextBlock Margin="5 0 5 0"
                                            Text="Фильтр" />
@@ -321,7 +344,131 @@
 									</ia:EventTriggerBehavior>
 								</i:Interaction.Behaviors>
 								<DataGrid.Columns>
-									<DataGridCheckBoxColumn Width="40"
+									<DataGridTemplateColumn
+										IsReadOnly="True"
+										Width="40"
+										Header="НПП">
+										<DataGridTemplateColumn.CellTemplate>
+											<DataTemplate DataType="model:Persons">
+												<CheckBox
+													
+													IsEnabled="False"
+													Classes.IsTrue="{Binding IsPed}"
+													IsChecked="{Binding Path=IsPed ,TargetNullValue={x:Null}}"
+													/>
+											</DataTemplate>
+										</DataGridTemplateColumn.CellTemplate>
+									</DataGridTemplateColumn>
+
+									<DataGridTemplateColumn
+										IsReadOnly="True"
+										Width="50"
+										Header="Пенсионер">
+										<DataGridTemplateColumn.CellTemplate>
+											<DataTemplate DataType="model:Persons">
+												<CheckBox
+													IsEnabled="False"
+													Classes.IsTrue="{Binding IsPensioner}"
+													IsChecked="{Binding Path=IsPensioner ,TargetNullValue={x:Null}}"
+													/>
+											</DataTemplate>
+										</DataGridTemplateColumn.CellTemplate>
+									</DataGridTemplateColumn>
+
+									<DataGridTemplateColumn
+										IsReadOnly="True"
+										Width="50"
+										Header="Осн.место">
+										<DataGridTemplateColumn.CellTemplate>
+											<DataTemplate DataType="model:Persons">
+												<CheckBox
+													IsEnabled="False"
+													Classes.IsTrue="{Binding IsMain}"
+													IsChecked="{Binding Path=IsMain ,TargetNullValue={x:Null}}"
+													/>
+											</DataTemplate>
+										</DataGridTemplateColumn.CellTemplate>
+									</DataGridTemplateColumn>
+
+									<DataGridTemplateColumn
+										IsReadOnly="True"
+										Width="50"
+										Header="Студент">
+										<DataGridTemplateColumn.CellTemplate>
+											<DataTemplate DataType="model:Persons">
+												<CheckBox
+													IsEnabled="False"
+													Classes.IsTrue="{Binding IsStudent}"
+													IsChecked="{Binding Path=IsStudent ,TargetNullValue={x:Null}}"
+													/>
+											</DataTemplate>
+										</DataGridTemplateColumn.CellTemplate>
+									</DataGridTemplateColumn>
+
+									<DataGridTemplateColumn
+										IsReadOnly="True"
+									Width="50"
+									Header="Аспирант">
+										<DataGridTemplateColumn.CellTemplate>
+											<DataTemplate DataType="model:Persons">
+												<CheckBox
+													IsEnabled="False"
+													Classes.IsTrue="{Binding IsGraduate}"
+													IsChecked="{Binding Path=IsGraduate ,TargetNullValue={x:Null}}"
+													/>
+											</DataTemplate>
+										</DataGridTemplateColumn.CellTemplate>
+									</DataGridTemplateColumn>
+
+									<DataGridTemplateColumn
+										IsReadOnly="True"
+									Width="50"
+									Header="Доктор">
+										<DataGridTemplateColumn.CellTemplate>
+											<DataTemplate DataType="model:Persons">
+												<CheckBox
+													IsEnabled="False"
+													Classes.IsTrue="{Binding IsDoctor}"
+													IsChecked="{Binding Path=IsDoctor ,TargetNullValue={x:Null}}"
+													/>
+											</DataTemplate>
+										</DataGridTemplateColumn.CellTemplate>
+									</DataGridTemplateColumn>
+
+
+									<DataGridTemplateColumn
+										IsReadOnly="True"
+									Width="50"
+									Header="Совместитель">
+										<DataGridTemplateColumn.CellTemplate>
+											<DataTemplate DataType="model:Persons">
+												<CheckBox
+													IsEnabled="False"
+													Classes.IsTrue="{Binding IsPluralismInner}"
+													IsChecked="{Binding Path=IsPluralismInner ,TargetNullValue={x:Null}}"
+													/>
+											</DataTemplate>
+										</DataGridTemplateColumn.CellTemplate>
+									</DataGridTemplateColumn>
+
+									<DataGridTemplateColumn
+										IsReadOnly="True"
+									Width="50"
+									Header="Внеш.Совместитель">
+										<DataGridTemplateColumn.CellTemplate>
+											<DataTemplate DataType="model:Persons">
+												<CheckBox
+													IsEnabled="False"
+													Classes.IsTrue="{Binding IsPluralismOter}"
+													IsChecked="{Binding Path=IsPluralismOter ,TargetNullValue={x:Null}}"
+													/>
+											</DataTemplate>
+										</DataGridTemplateColumn.CellTemplate>
+									</DataGridTemplateColumn>
+									
+									
+									
+									<!--<DataGridCheckBoxColumn Width="40"
                                                             Header="НПП"
                                                             Binding="{Binding Path=IsPed ,TargetNullValue={x:Null}}" />
 									<DataGridCheckBoxColumn Width="50"
@@ -344,7 +491,7 @@
                                                             Binding="{Binding Path=IsPluralismInner ,TargetNullValue={x:Null}}" />
 									<DataGridCheckBoxColumn Width="50"
                                                             Header="Внешний Совместитель"
-                                                            Binding="{Binding Path=IsPluralismOter ,TargetNullValue={x:Null}}" />
+                                                            Binding="{Binding Path=IsPluralismOter ,TargetNullValue={x:Null}}" />-->
 									<DataGridTextColumn Header="Фамилия"
                                                         Binding="{Binding Path=FirstName}" />
 									<DataGridTextColumn Header="Имя"

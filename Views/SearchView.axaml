@@ -22,8 +22,7 @@
                            Text="Глобальный поиск"
                            Classes="h3"
                            Grid.Row="0" />
-				<Button Background="#086f9e"
-                        Foreground="White"
+				<Button 
                         HorizontalAlignment="Left"
                         Grid.Row="0"
                         Command="{Binding GoBack}">
@@ -39,8 +38,7 @@
                                      Margin="5"
                                      Grid.Column="0"
                                      Grid.Row="0" />
-							<Button Background="#086f9e"
-                                    Foreground="White"
+							<Button 
                                     Margin="5"
                                     Command="{Binding SearchPerson}"
                                     HotKey="Return"

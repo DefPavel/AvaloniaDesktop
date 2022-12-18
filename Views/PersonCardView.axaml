@@ -197,7 +197,7 @@
 											<RadioButton IsChecked="{Binding RadioIsMale}"
                                                          Padding="2"
                                                          Content="Мужчина" />
-											<RadioButton IsChecked="{Binding RadioIsFemale}"
+											<RadioButton IsChecked="{Binding RadioIsFeMale}"
                                                          Padding="2"
                                                          Content="Женщина" />
 										</StackPanel>
@@ -234,7 +234,7 @@
                                                Grid.Row="6"
                                                Content="Текущий возраст" />
 										<Label Grid.Row="7"
-                                               Foreground="#B71C1C"
+                                               
                                                Margin="4 0 4 0"
                                                Content="{Binding FullAge}"
                                                FontWeight="Bold" />

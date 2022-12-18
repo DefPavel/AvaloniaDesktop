@@ -40,19 +40,49 @@ public sealed class PersonCardViewModel :  ViewModelBase, IRoutableViewModel
     [Reactive] public string? FilterName { get; set; }
     [Reactive] public Persons? SelectedPerson { get; set; }
     [Reactive] public Position? SelectedPosition { get; set; }
-    [Reactive] public Persons? InforamationPerson { get; set; }
-    
+
+    private Persons? _inforamationPerson;
+    public Persons? InforamationPerson
+    {
+        get => _inforamationPerson;
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _inforamationPerson, value);
+
+            if (_inforamationPerson!.Gender == "male")
+            {
+                RadioIsMale = true;
+                RadioIsFeMale = false;
+            }
+            else
+            {
+                RadioIsMale = false;
+                RadioIsFeMale = true;
+            }
+        }
+    }
+
     // [Reactive] public Departments? SelectedDepartments { get; set; }
     [Reactive] public string? TitleDepartment { get; set; }
 
     #endregion
 
     #region Свойства RadioButton
-    
-    [Reactive] public bool RadioIsMale { get; set; }
-    
-    [Reactive] public bool RadioIsFemale { get; set; }
-    
+
+    private bool _radioMale = false;
+    public bool RadioIsMale
+    {
+        get => _radioMale;
+        set => this.RaiseAndSetIfChanged(ref _radioMale, value);
+    }
+
+    private bool _radioFeMale = false;
+    public bool RadioIsFeMale
+    {
+        get => _radioFeMale;
+        set => this.RaiseAndSetIfChanged(ref _radioFeMale, value);
+    }
+
     #endregion
 
     #region Массивы
@@ -86,7 +116,7 @@ public sealed class PersonCardViewModel :  ViewModelBase, IRoutableViewModel
                     "Вы не проявляли активности в программе более 30 минут!");
             await messageBoxStandardWindow.Show();
 
-            HostScreen.Router.NavigateAndReset.Execute(new LoginViewModel(HostScreen));
+            _ = HostScreen.Router.NavigateAndReset.Execute(new LoginViewModel(HostScreen));
         }
         // Ошибка с сервера
         catch (WebException ex)
@@ -120,7 +150,7 @@ public sealed class PersonCardViewModel :  ViewModelBase, IRoutableViewModel
 
     // Интерполяция возраста
     private static string GetFullAge(Persons informationTask) => 
-        $"Лет:{informationTask.FullAge?.Years}; Месяцев:{informationTask.FullAge?.Months}; Дней:{informationTask.FullAge?.Days};";
+        $"Лет: {informationTask.FullAge?.Years}; Месяцев: {informationTask.FullAge?.Months}; Дней: {informationTask.FullAge?.Days};";
     
 
     // При переходе на персональную карту
@@ -150,7 +180,7 @@ public sealed class PersonCardViewModel :  ViewModelBase, IRoutableViewModel
                     "Вы не проявляли активности в программе более 30 минут!");
             await messageBoxStandardWindow.Show();
 
-            HostScreen.Router.NavigateAndReset.Execute(new LoginViewModel(HostScreen));
+            _ = HostScreen.Router.NavigateAndReset.Execute(new LoginViewModel(HostScreen));
         }
         // Ошибка с сервера
         catch (WebException ex)
@@ -194,7 +224,7 @@ public sealed class PersonCardViewModel :  ViewModelBase, IRoutableViewModel
                     "Вы не проявляли активности в программе более 30 минут!");
             await messageBoxStandardWindow.Show();
 
-            HostScreen.Router.NavigateAndReset.Execute(new LoginViewModel(HostScreen));
+            _ = HostScreen.Router.NavigateAndReset.Execute(new LoginViewModel(HostScreen));
         }
         // Ошибка с сервера
         catch (WebException ex)
