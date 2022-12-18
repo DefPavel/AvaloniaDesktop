@@ -16,11 +16,10 @@
 	</Design.DataContext>
 	<Grid ColumnDefinitions="250, *">
 		<TreeView SelectionMode="Single"
-                  Background="White"
-                  Name="TreeView"
+		          Name="TreeView"
+		          BorderBrush="#424242"
                   BorderThickness="2"
-                  BorderBrush="#BDBDBD"
-                  SelectedItem="{Binding Path=SelectedDepartments}"
+		          SelectedItem="{Binding Path=SelectedDepartments}"
                   MinWidth="200"
                   Items="{Binding Path=DepartmentsList}"
                   Grid.Column="0">
@@ -37,21 +36,21 @@
 				</TreeDataTemplate>
 			</TreeView.ItemTemplate>
 		</TreeView>
-		<GridSplitter Background="#BDBDBD"
+		<GridSplitter Background="#424242"
                       HorizontalAlignment="Right"
                       Width="2"
                       Grid.Column="0" />
 		<Border Grid.Column="1">
 			<Grid RowDefinitions="35 , *">
 				<Separator Grid.Row="0"
-                           Background="#BDBDBD"
+                           Background="#424242"
                            VerticalAlignment="Top"
                            Height="2" />
 				<TextBlock Grid.Row="0"
                            Classes="h3"
                            Text="{Binding Path=SelectedDepartments.Name}" />
 				<TabControl Margin="3 0 3 3"
-                            BorderBrush="#BDBDBD"
+                            BorderBrush="#424242"
                             Grid.Row="1">
 					<TabItem Header="Информация о подразделении">
 						<Grid RowDefinitions="35,35,35,35,35,35"
@@ -158,12 +157,12 @@
 										</DataGridTemplateColumn.CellTemplate>
 										<DataGridTemplateColumn.CellEditingTemplate>
 											<DataTemplate>
-												<AutoCompleteBox Foreground="Black"
+												<AutoCompleteBox 
                                                                  MaxDropDownHeight="80"
                                                                  Items="{Binding DataContext.TypePosition, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
                                                                  Text="{Binding $parent[DataGridRow].DataContext.Name, Mode=TwoWay}"
                                                                  FilterMode="StartsWithOrdinal"
-                                                                 BorderThickness="0" />
+                                                                 />
 											</DataTemplate>
 										</DataGridTemplateColumn.CellEditingTemplate>
 									</DataGridTemplateColumn>
@@ -186,7 +185,6 @@
                                            Text="Должность" />
 								<AutoCompleteBox Grid.Row="0"
                                                  Grid.Column="1"
-                                                 BorderThickness="0"
                                                  MaxDropDownHeight="80"
                                                  Text="{Binding Path=SelectedPosition.Name}"
                                                  Items="{Binding Path=TypePosition}"

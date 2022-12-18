@@ -42,7 +42,7 @@
     
     <Style Selector="TabItem">
         <Setter Property="FontSize" Value="13"/>
-        <Setter Property="Foreground" Value="Black"/>
+        <Setter Property="Foreground" Value="White"/>
         <Setter Property="Height" Value="28"/>
         <Setter Property="FontWeight" Value="Regular"/>
         <Setter Property="VerticalAlignment" Value="Center"/>

@@ -12,10 +12,10 @@
 		<vm:GlobalSearchViewModel />
 	</Design.DataContext>
 	<Grid>
-		<Border BoxShadow="3 3 10 2 #BDBDBD"
-                BorderThickness="2"
+		<Border 
+		        BorderBrush="#424242"
+                BorderThickness="3"
                 CornerRadius="3"
-                Background="White"
                 Margin="10">
 			<Grid RowDefinitions="35, *">
 				<TextBlock HorizontalAlignment="Center"

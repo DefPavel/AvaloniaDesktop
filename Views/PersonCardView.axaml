@@ -112,9 +112,9 @@
                        Background="#BDBDBD"
                        VerticalAlignment="Bottom"
                        Height="2" />
-			<TabControl Background="White"
-                        BorderThickness="1"
-                        BorderBrush="#BDBDBD"
+			<TabControl 
+                        BorderThickness="2"
+                        BorderBrush="#424242"
                         Margin="5 5 5 0"
                         Grid.Row="2">
 				<TabItem Header="Личная карта">
@@ -123,8 +123,8 @@
 					</TabItem.Resources>
 					<ScrollViewer>
 						<Grid RowDefinitions="330,185,*,*">
-							<Border BorderBrush="#BDBDBD"
-                                    BorderThickness="1"
+							<Border BorderBrush="#424242"
+                                    BorderThickness="2"
                                     Margin="5"
                                     Grid.Row="0">
 								<Grid Margin="5"
@@ -133,8 +133,8 @@
 										<Border Margin="5"
                                                 Padding="3"
                                                 MinHeight="140"
-                                                BorderBrush="#BDBDBD"
-                                                BorderThickness="1">
+                                                BorderBrush="#424242"
+                                                BorderThickness="2">
 											<Image Stretch="Uniform"
                                                    asyncImageLoader:ImageLoader.Source="{Binding InforamationPerson.Photo}"
                                                    HorizontalAlignment="Center"
@@ -156,7 +156,7 @@
                                           Grid.Column="1"
                                           RowDefinitions="23,35,23,35,23,35,23,35,23,35,*">
 										<Label Margin="4 0 4 0"
-                                               Background="LightGray"
+                                               Background="#424242"
                                                Grid.Row="0"
                                                Content="Фамилия:" />
 										<Grid Grid.Row="1"
@@ -177,19 +177,19 @@
 											</Button>
 										</Grid>
 										<Label Margin="4 0 4 0"
-                                               Background="LightGray"
+                                               Background="#424242"
                                                Grid.Row="2"
                                                Content="Имя:" />
 										<TextBox Grid.Row="3"
                                                  Text="{Binding InforamationPerson.MidlleName}" />
 										<Label Margin="4 0 4 0"
                                                Grid.Row="4"
-                                               Background="LightGray"
+                                               Background="#424242"
                                                Content="Отчество:" />
 										<TextBox Grid.Row="5"
                                                  Text="{Binding InforamationPerson.LastName}" />
 										<Label Margin="4 0 4 0"
-                                               Background="LightGray"
+                                               Background="#424242"
                                                Grid.Row="6"
                                                Content="Пол:" />
 										<StackPanel Orientation="Horizontal"
@@ -202,7 +202,7 @@
                                                          Content="Женщина" />
 										</StackPanel>
 										<Label Margin="4 0 4 0"
-                                               Background="LightGray"
+                                               Background="#424242"
                                                Grid.Row="8"
                                                Content="Номер карты" />
 										<TextBox Grid.Row="9"
@@ -212,25 +212,25 @@
                                           Grid.Column="2"
                                           RowDefinitions="23,35,23,35,23,35,23,35,23,35,*">
 										<Label Margin="4 0 4 0"
-                                               Background="LightGray"
+                                               Background="#424242"
                                                Grid.Row="0"
                                                Content="Номер телефона Лугаком:" />
 										<TextBox Grid.Row="1"
                                                  Text="{Binding InforamationPerson.PhoneLugakom}" />
 										<Label Margin="4 0 4 0"
-                                               Background="LightGray"
+                                               Background="#424242"
                                                Grid.Row="2"
                                                Content="Номер телефона MTC:" />
 										<TextBox Grid.Row="3"
                                                  Text="{Binding InforamationPerson.PhoneUkraine}" />
 										<Label Margin="4 0 4 0"
-                                               Background="LightGray"
+                                               Background="#424242"
                                                Grid.Row="4"
                                                Content="Дата рождения" />
 										<TextBox Grid.Row="5"
                                                  Text="{Binding InforamationPerson.Birthday, Converter={StaticResource ConvertDate}}" />
 										<Label Margin="4 0 4 0"
-                                               Background="LightGray"
+                                               Background="#424242"
                                                Grid.Row="6"
                                                Content="Текущий возраст" />
 										<Label Grid.Row="7"
@@ -241,7 +241,8 @@
 										<Label Classes.Visible="{Binding InforamationPerson.IsPluralismOter}"
                                                Classes.NotVisible="{Binding !InforamationPerson.IsPluralismOter}"
                                                Margin="4 0 4 0"
-                                               Background="LightGray"
+                                               FontWeight="Bold"
+                                               Background="#424242"
                                                Grid.Row="8"
                                                Content="Основное место работы (Внеш. совместителя)">
 											<Label.Styles>
@@ -281,8 +282,8 @@
 									</Grid>
 								</Grid>
 							</Border>
-							<Border BorderBrush="#BDBDBD"
-                                    BorderThickness="1"
+							<Border BorderBrush="#424242"
+                                    BorderThickness="2"
                                     Margin="5"
                                     Grid.Row="1">
 								<Grid ColumnDefinitions="*,*">
@@ -426,8 +427,8 @@
 									</StackPanel>
 								</Grid>
 							</Border>
-							<Border BorderBrush="#BDBDBD"
-                                    BorderThickness="1"
+							<Border BorderBrush="#424242"
+                                    BorderThickness="2"
                                     Margin="5"
                                     Grid.Row="2">
 								<Grid RowDefinitions="30,*">
@@ -526,7 +527,10 @@
 									</DataGrid>
 								</Grid>
 							</Border>
-							<Border Margin="5"
+							<Border 
+								BorderThickness="2"
+								BorderBrush="#424242"
+								Margin="5"
                                     Grid.Row="3">
 								<TextBox Watermark="Описание"
                                          AcceptsReturn="True"
